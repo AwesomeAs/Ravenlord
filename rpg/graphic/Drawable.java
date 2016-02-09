@@ -7,6 +7,7 @@ public abstract class Drawable {
 	private double x;
 	private double y;
 	private double offset;
+	private double height;
 	
 	/**
 	 * Gets the X coordinate in world space.
@@ -48,6 +49,23 @@ public abstract class Drawable {
 	 */
 	public void setGroundOffset(double y) {
 		this.offset = y;
+	}
+	
+	/**
+	 * Returns the result of the elevation from the top surface of this drawable minus the elevation of its bottom surface.
+	 * @return height
+	 */
+	public double getHeight() {
+		return height;
+	}
+	
+	/**
+	 * Sets the result of the elevation from the top surface of this drawable minus the elevation of its bottom surface.<br>
+	 * Useable for setting collision detection for i.e. pillars, walls etc.
+	 * @param height
+	 */
+	public void setHeight(double height) {
+		this.height = height;
 	}
 	
 	/**
