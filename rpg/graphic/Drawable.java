@@ -8,6 +8,7 @@ public abstract class Drawable {
 	private double y;
 	private double offset;
 	private double height;
+	private int ZIndex = 10;
 	
 	/**
 	 * Gets the X coordinate in world space.
@@ -66,6 +67,22 @@ public abstract class Drawable {
 	 */
 	public void setHeight(double height) {
 		this.height = height;
+	}
+	
+	/**
+	 * Gets the "layered position" for this object to be drawn. Higher value = closer to screen.
+	 * @return z index
+	 */
+	public int getZIndex() {
+		return ZIndex;
+	}
+	
+	/**
+	 * Sets the "layered position" for this object to be drawn. Higher value = closer to screen.
+	 * @param zindex
+	 */
+	public void setZIndex(int zindex) {
+		this.ZIndex = zindex;
 	}
 	
 	/**
