@@ -1,5 +1,172 @@
 package graphic;
 
-public class Viewport {
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Hashtable;
+import java.util.function.BiConsumer;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+/**
+ * Viewport for sorting drawable objects and calling onDraw on them.
+ * 
+ * @author Andreas
+ *
+ */
+public class Viewport {
+	
+	private static Viewport instance;
+	private JFrame frame;
+	private CustomPanel panel;
+	
+	private ArrayList<Drawable> render;
+	
+	/**
+	 * Gets the singleton instance.
+	 * @return Viewport
+	 */
+	public static Viewport getInstance() {
+		if (instance == null) {
+			instance = new Viewport();
+		}
+		return instance;
+	}
+	
+	private Viewport() {
+		render = new ArrayList<Drawable>();
+		frame = new JFrame("Ravenlord");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		panel = new CustomPanel();
+		frame.getContentPane().add(panel);
+		frame.pack();
+		frame.setVisible(true);
+	}
+	
+	/**
+	 * Add the drawable object to the scene.
+	 * @param obj
+	 */
+	public void add(Drawable obj) {
+		if (!render.contains(obj)) {
+			render.add(obj);
+		}
+	}
+	
+	/**
+	 * Removes the object from the scene
+	 * @param obj
+	 * @return boolean indicating success for removal.
+	 */
+	public boolean remove(Drawable obj) {
+		if (render.contains(obj)) {
+			render.remove(obj);
+			return true;
+		}
+		return false;
+	}
+	
+	private class CustomPanel extends JPanel {
+		private static final long serialVersionUID = 1L;
+
+		private CustomPanel() {
+			
+			setPreferredSize(new Dimension(800, 600));
+			
+			setLayout(null);
+			
+			MyThread mt = new MyThread();
+	        new Thread(mt).start();
+			
+		}
+		
+		/**
+		 * Draws the game.
+		 */
+		@Override
+		public void paintComponent(Graphics g) {
+			Graphics2D g2d = (Graphics2D)g;
+			Hashtable<Integer, ArrayList<Drawable>> crender = new Hashtable<Integer, ArrayList<Drawable>>();
+			ArrayList<Integer> zindexes = new ArrayList<Integer>();
+			
+			/**
+			 * Add current Z-indexes and drawables.
+			 */
+			for (Drawable d : render) {
+				int z = d.getZIndex();
+				if (!zindexes.contains(z)) {
+					zindexes.add(z);
+				}
+				if (crender.get(z) == null) {
+					crender.put(z, new ArrayList<Drawable>());
+				}
+				crender.get(z).add(d);
+			}
+			
+			/**
+			 * Sort Z-indexes.
+			 */
+			zindexes.sort(new Comparator<Integer>() {
+
+				@Override
+				public int compare(Integer arg0, Integer arg1) {
+					return arg0.compareTo(arg1);
+				}
+				
+			});
+			
+			/**
+			 * Sort objects by Y position.
+			 */
+			crender.forEach(new BiConsumer<Integer, ArrayList<Drawable>>() {
+
+				@Override
+				public void accept(Integer arg0, ArrayList<Drawable> arg1) {
+					arg1.sort(new Comparator<Drawable>() {
+
+						@Override
+						public int compare(Drawable o1, Drawable o2) {
+							return Double.compare(o1.getY(), o2.getY());
+						}
+						
+					});
+				}
+				
+			});
+			
+			/**
+			 * Draw the objects.
+			 */
+			for (int i = 0; i < zindexes.size(); i++) {
+				for (int j = 0; j < crender.get(zindexes.get(i)).size(); j++) {
+					Drawable o = crender.get(zindexes.get(i)).get(j);
+					// TODO: Set screen position for the object.
+					o.onDraw(g2d);
+				}
+			}
+			
+		}
+		
+	}
+	
+	/**
+	 * Keep drawing, every 10ms.
+	 * @author Andreas
+	 *
+	 */
+	private class MyThread implements Runnable {
+		@Override
+		public void run() {
+			while (true) {
+				panel.repaint();
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {}
+			}
+		}
+	}
+	
 }
