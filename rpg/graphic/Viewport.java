@@ -3,11 +3,13 @@ package graphic;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.function.BiConsumer;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -43,6 +45,8 @@ public class Viewport {
 		panel = new CustomPanel();
 		frame.getContentPane().add(panel);
 		frame.pack();
+		URL iconUrl = getClass().getClassLoader().getResource("icon.png");
+		frame.setIconImage(new ImageIcon(iconUrl).getImage());
 		frame.setVisible(true);
 	}
 	
@@ -74,7 +78,7 @@ public class Viewport {
 
 		private CustomPanel() {
 			
-			setPreferredSize(new Dimension(800, 600));
+			setPreferredSize(new Dimension(832, 640));
 			
 			setLayout(null);
 			
@@ -95,7 +99,9 @@ public class Viewport {
 			/**
 			 * Add current Z-indexes and drawables.
 			 */
-			for (Drawable d : render) {
+			Object[] iter = render.toArray();
+			for (int i = 0; i < iter.length; i++) {
+				Drawable d = (Drawable)iter[i];
 				int z = d.getZIndex();
 				if (!zindexes.contains(z)) {
 					zindexes.add(z);
@@ -144,7 +150,11 @@ public class Viewport {
 				for (int j = 0; j < crender.get(zindexes.get(i)).size(); j++) {
 					Drawable o = crender.get(zindexes.get(i)).get(j);
 					// TODO: Set screen position for the object.
+					double x = o.getX();
+					double y = o.getY() - o.getGroundOffset();
+					g2d.translate(x, y);
 					o.onDraw(g2d);
+					g2d.translate(-x, -y);
 				}
 			}
 			
