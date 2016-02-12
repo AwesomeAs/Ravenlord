@@ -2,6 +2,7 @@ package game;
 
 import graphic.Viewport;
 import graphic.map.*;
+import graphic.ui.*;
 
 public class Main {
 
@@ -23,6 +24,8 @@ public class Main {
 		for (int x = 64; x < 800 - 64; x += 64) {
 			view.add(new CobbleWall(x, 512, (x > 64 ? (x < 800 - 128 ? "CBM" : "CBR") : "CBL")));
 		}
+		
+		view.add(new LButton("Test", view.getWidth() / 2 - 200, view.getHeight() / 2 - 30).setSize(400, 60));
 	}
 
 }

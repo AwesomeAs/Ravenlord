@@ -10,6 +10,7 @@ import java.util.Hashtable;
 import java.util.function.BiConsumer;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -58,6 +59,18 @@ public class Viewport {
 		if (!render.contains(obj)) {
 			render.add(obj);
 		}
+	}
+	
+	public int getWidth() {
+		return 832;
+	}
+	
+	public int getHeight() {
+		return 640;
+	}
+	
+	public void addToPanel(JButton button) {
+		panel.add(button);
 	}
 	
 	/**
