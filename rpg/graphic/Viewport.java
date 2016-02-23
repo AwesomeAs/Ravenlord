@@ -3,6 +3,7 @@ package graphic;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -13,6 +14,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import graphic.ui.*;
 
 /**
  * Viewport for sorting drawable objects and calling onDraw on them.
@@ -58,6 +61,14 @@ public class Viewport {
 	public void add(Drawable obj) {
 		if (!render.contains(obj)) {
 			render.add(obj);
+			if (obj instanceof Group) {
+				Drawable[] d = ((Group)obj).getObjects();
+				for (int i = 0; i < d.length; i++) {
+					if (d[i] instanceof Clickable) {
+						panel.add(((Clickable)d[i]).getButton());
+					}
+				}
+			}
 		}
 	}
 	
@@ -81,6 +92,19 @@ public class Viewport {
 	public boolean remove(Drawable obj) {
 		if (render.contains(obj)) {
 			render.remove(obj);
+			if (obj instanceof Clickable) {
+				panel.remove(((Clickable)obj).getButton());
+			} else if (obj instanceof Group) {
+				Drawable[] d = ((Group)obj).getObjects();
+				for (int i = 0; i < d.length; i++) {
+					if (d[i] instanceof Clickable) {
+						panel.remove(((Clickable)d[i]).getButton());
+						if (d[i] instanceof LButton) {
+							((LButton)d[i]).setHovered(false);
+						}
+					}
+				}
+			}
 			return true;
 		}
 		return false;
@@ -106,6 +130,7 @@ public class Viewport {
 		@Override
 		public void paintComponent(Graphics g) {
 			Graphics2D g2d = (Graphics2D)g;
+			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 			Hashtable<Integer, ArrayList<Drawable>> crender = new Hashtable<Integer, ArrayList<Drawable>>();
 			ArrayList<Integer> zindexes = new ArrayList<Integer>();
 			
@@ -114,15 +139,29 @@ public class Viewport {
 			 */
 			Object[] iter = render.toArray();
 			for (int i = 0; i < iter.length; i++) {
-				Drawable d = (Drawable)iter[i];
-				int z = d.getZIndex();
-				if (!zindexes.contains(z)) {
-					zindexes.add(z);
+				if (iter[i] instanceof Group) {
+					Drawable[] d = ((Group)iter[i]).getObjects();
+					for (int j = 0; j < d.length; j++) {
+						int z = d[j].getZIndex();
+						if (!zindexes.contains(z)) {
+							zindexes.add(z);
+						}
+						if (crender.get(z) == null) {
+							crender.put(z, new ArrayList<Drawable>());
+						}
+						crender.get(z).add(d[j]);
+					}
+				} else {
+					Drawable d = (Drawable)iter[i];
+					int z = d.getZIndex();
+					if (!zindexes.contains(z)) {
+						zindexes.add(z);
+					}
+					if (crender.get(z) == null) {
+						crender.put(z, new ArrayList<Drawable>());
+					}
+					crender.get(z).add(d);
 				}
-				if (crender.get(z) == null) {
-					crender.put(z, new ArrayList<Drawable>());
-				}
-				crender.get(z).add(d);
 			}
 			
 			/**
