@@ -11,9 +11,15 @@ import graphic.Drawable;
 public abstract class Clickable extends Drawable {
 	
 	protected CustomButton button = new CustomButton();
+	protected ButtonCallback bclb;
 	
 	public CustomButton getButton() {
 		return button;
+	}
+	
+	public Clickable setCallback(ButtonCallback callback) {
+		this.bclb = callback;
+		return this;
 	}
 	
 	protected class CustomButton extends JButton implements MouseListener {
@@ -29,32 +35,22 @@ public abstract class Clickable extends Drawable {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
-			System.out.println("CLICK: " + e);
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-			System.out.println("ENTER: " + e);
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-			System.out.println("EXIT: " + e);
 		}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
 		}
 		
 	}
