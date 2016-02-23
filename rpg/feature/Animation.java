@@ -64,6 +64,7 @@ public class Animation {
 				g.drawImage(img.getImage(), -i * imgwidth * 2, 0, imgwidth * 2, img.getIconHeight() * 2, img.getImageObserver());
 				g.setClip(null);
 			}
+			System.out.println("Animation length: " + length);
 		} else {
 			clip = new BufferedImage[0];
 		}

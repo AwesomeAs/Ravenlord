@@ -25,6 +25,7 @@ public class Main {
 		for (int x = 64; x < 800 - 64; x += 64) {
 			view.add(new CobbleWall(x, 512, (x > 64 ? (x < 800 - 128 ? "CBM" : "CBR") : "CBL")));
 		}
+		view.add(new Fireplace(64, 64));
 		
 		Group main_g = new Group();
 		Group cred_g = new Group();
