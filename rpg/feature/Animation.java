@@ -52,20 +52,22 @@ public class Animation {
 	 */
 	public Animation(String filepath, int imgwidth, double imgduration) {
 		this.imgduration = imgduration;
-		if (new File(filepath + ".png").exists()) {
-			ImageIcon img = new ImageIcon(filepath + ".png");
+		if (new File("resources/" + filepath + ".png").exists()) {
+			ImageIcon img = new ImageIcon("resources/" + filepath + ".png");
 			int length = (int)((float)img.getIconWidth() / imgwidth);
 			clip = new BufferedImage[length];
+			int height = img.getIconHeight();
+			System.out.println("Animation img height: " + height * 2 + ", width: " + imgwidth * 2);
 			for (int i = 0; i < length; i++) {
-				clip[i] = new BufferedImage(
-						imgwidth * 2, img.getIconHeight() * 2, BufferedImage.TYPE_INT_ARGB);
+				clip[i] = new BufferedImage(imgwidth * 2, height * 2, BufferedImage.TYPE_INT_ARGB);
 				Graphics2D g = clip[i].createGraphics();
-				g.setClip(i * imgwidth, 0, imgwidth, img.getIconHeight());
-				g.drawImage(img.getImage(), -i * imgwidth * 2, 0, imgwidth * 2, img.getIconHeight() * 2, img.getImageObserver());
+				g.setClip(0, 0, imgwidth * 2, height * 8);
+				g.drawImage(img.getImage(), -i * imgwidth * 2, 0, imgwidth * length * 2, height * 2, img.getImageObserver());
 				g.setClip(null);
 			}
 			System.out.println("Animation length: " + length);
 		} else {
+			System.out.println("Empty animation: '" + filepath + ".png'");
 			clip = new BufferedImage[0];
 		}
 	}
@@ -94,6 +96,15 @@ public class Animation {
 			index += (1 / imgduration);
 			index = index % clip.length;
 			return clip[(int)index];
+		} else {
+			return null;
+		}
+	}
+	
+	public BufferedImage getImage(int index) {
+		if (clip.length > 0 && index < clip.length) {
+			this.index = index;
+			return clip[index];
 		} else {
 			return null;
 		}

@@ -12,6 +12,7 @@ public class Grass extends Drawable {
 	
 	public Grass(int x, int y) {
 		super.setPosition(x, y);
+		super.setZIndex(9);
 		anim = new Animation("map/Grass");
 	}
 

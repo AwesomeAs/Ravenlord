@@ -6,14 +6,14 @@ import java.awt.image.BufferedImage;
 import feature.Animation;
 import graphic.Drawable;
 
-public class Fireplace extends Drawable {
+public class TreeG extends Drawable {
 	
 	private Animation anim;
 	
-	public Fireplace(int x, int y) {
+	public TreeG(int x, int y, int treeType) {
 		super.setPosition(x, y);
-		super.setImgHeight(128);
-		anim = new Animation("map/Fireplace0", 64, 10.0);
+		super.setImgHeight(384);
+		anim = new Animation("map/TreeG" + treeType);
 	}
 
 	@Override

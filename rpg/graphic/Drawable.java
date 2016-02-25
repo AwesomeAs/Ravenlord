@@ -9,6 +9,7 @@ public abstract class Drawable {
 	private double offset;
 	private double height;
 	private int ZIndex = 10;
+	private double imgheight = 0;
 	
 	/**
 	 * Gets the X coordinate in world space.
@@ -24,6 +25,22 @@ public abstract class Drawable {
 	 */
 	public double getY() {
 		return y;
+	}
+	
+	/**
+	 * Gets the visual height of this image.
+	 * @return y height
+	 */
+	public double getImgHeight() {
+		return imgheight;
+	}
+	
+	/**
+	 * Sets the visual height of this image, used for z-indexing.
+	 * @param value
+	 */
+	public void setImgHeight(double value) {
+		imgheight = value;
 	}
 	
 	/**

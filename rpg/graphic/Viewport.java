@@ -110,6 +110,24 @@ public class Viewport {
 		return false;
 	}
 	
+	/**
+	 * Sets whether the game is fullscreen or not.
+	 * @param fs fullscreen
+	 */
+	public void setFullscreen(boolean fs) {
+		if (fs) {
+			frame.setVisible(false);
+			frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+			frame.setVisible(true);
+			panel.setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
+		} else {
+			frame.setVisible(false);
+			frame.setExtendedState(JFrame.NORMAL); 
+			frame.setVisible(true);
+			panel.setPreferredSize(new Dimension(832, 640));
+		}
+	}
+	
 	private class CustomPanel extends JPanel {
 		private static final long serialVersionUID = 1L;
 
@@ -130,7 +148,8 @@ public class Viewport {
 		@Override
 		public void paintComponent(Graphics g) {
 			Graphics2D g2d = (Graphics2D)g;
-			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.clearRect(0, 0, getWidth(), getHeight());
 			Hashtable<Integer, ArrayList<Drawable>> crender = new Hashtable<Integer, ArrayList<Drawable>>();
 			ArrayList<Integer> zindexes = new ArrayList<Integer>();
 			
@@ -187,7 +206,7 @@ public class Viewport {
 
 						@Override
 						public int compare(Drawable o1, Drawable o2) {
-							return Double.compare(o1.getY(), o2.getY());
+							return Double.compare(o1.getY() + o1.getImgHeight(), o2.getY() + o2.getImgHeight());
 						}
 						
 					});
