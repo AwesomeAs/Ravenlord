@@ -2,6 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="rpg"/>
 	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="src" path="web"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="json-20090211.jar"/>
+	<classpathentry kind="lib" path="recaptcha4j-0.0.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

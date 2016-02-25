@@ -18,8 +18,8 @@ public class LButton extends Clickable {
 	private String text;
 	private Font font;
 	
-	public LButton(String text, int x, int y) {
-		img = new ImageIcon("resources/ui/MainB.png");
+	public LButton(String text, int x, int y, boolean small) {
+		img = new ImageIcon(small ? "resources/ui/MainSB.png" : "resources/ui/MainB.png");
 		font = new FontManager("Amatic-Bold.ttf", 32).get();
 		LButton diz = this;
 		this.text = text;
@@ -54,8 +54,12 @@ public class LButton extends Clickable {
 			}
 			
 		});
-		super.button.setSize(572, 64);
+		super.button.setSize(small ? 332 : 572, 64);
 		super.button.setLocation((int)getX(), (int)getY());
+	}
+	
+	public LButton(String text, int x, int y) {
+		this(text, x, y, false);
 	}
 	
 	public LButton setSize(int width, int height) {

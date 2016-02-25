@@ -40,6 +40,10 @@ public class LText extends Drawable {
 		return this;
 	}
 	
+	public void setText(String text) {
+		this.text = text;
+	}
+	
 	@Override
 	public void onDraw(Graphics2D g) {
 		g.setColor(new Color(0f, 0f, 0f, bgAlpha));

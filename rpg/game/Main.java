@@ -48,13 +48,13 @@ public class Main {
 		Group main_g = new Group();
 		Group cred_g = new Group();
 		Group sett_g = new Group();
+		Group login_g = new Group();
 		main_g.add(new LButton("Play game", view.getWidth() / 2 - 286, view.getHeight() / 2 - 82).setSize(572, 64).setCallback(new ButtonCallback() {
 
 			@Override
 			public void onClick() {
 				view.remove(main_g);
-				view.remove(mainbg_g);
-				view.add(game_map);
+				view.add(login_g);
 			}
 			
 		}));
@@ -112,6 +112,35 @@ public class Main {
 			}
 			
 		}));
+		login_g.add(new LText("", view.getWidth() / 2 - 296, view.getHeight() / 2 - 220).setSize(592, 220));
+		login_g.add(new LText("Login", view.getWidth() / 2 - 286, view.getHeight() / 2 - 210, 48, 0f).setSize(572, 50));
+		login_g.add(new LText("Username:", view.getWidth() / 2 - 286, view.getHeight() / 2 - 160, 28, 0f).setSize(572, 30));
+		login_g.add(new LTextfield(view.getWidth() / 2 - 186, view.getHeight() / 2 - 140));
+		login_g.add(new LText("Password:", view.getWidth() / 2 - 286, view.getHeight() / 2 - 110, 28, 0f).setSize(572, 30));
+		login_g.add(new LTextfield(view.getWidth() / 2 - 186, view.getHeight() / 2 - 90));
+		login_g.add(new LText("", view.getWidth() / 2 - 286, view.getHeight() / 2 - 70, 22, 0f).setSize(572, 30));
+		
+		login_g.add(new LButton("Login", view.getWidth() / 2 - 326, view.getHeight() / 2 + 50, true).setSize(332, 64).setCallback(new ButtonCallback() {
+
+			@Override
+			public void onClick() {
+				view.remove(login_g);
+				view.remove(mainbg_g);
+				view.add(game_map);
+			}
+			
+		}));
+		login_g.add(new LButton("Main menu", view.getWidth() / 2 - 6, view.getHeight() / 2 + 50, true).setSize(332, 64)
+				.setCallback(new ButtonCallback() {
+
+			@Override
+			public void onClick() {
+				view.remove(login_g);
+				view.add(main_g);
+			}
+			
+		}));
+		
 		view.add(main_g);
 	}
 

@@ -57,7 +57,6 @@ public class Animation {
 			int length = (int)((float)img.getIconWidth() / imgwidth);
 			clip = new BufferedImage[length];
 			int height = img.getIconHeight();
-			System.out.println("Animation img height: " + height * 2 + ", width: " + imgwidth * 2);
 			for (int i = 0; i < length; i++) {
 				clip[i] = new BufferedImage(imgwidth * 2, height * 2, BufferedImage.TYPE_INT_ARGB);
 				Graphics2D g = clip[i].createGraphics();
@@ -65,9 +64,7 @@ public class Animation {
 				g.drawImage(img.getImage(), -i * imgwidth * 2, 0, imgwidth * length * 2, height * 2, img.getImageObserver());
 				g.setClip(null);
 			}
-			System.out.println("Animation length: " + length);
 		} else {
-			System.out.println("Empty animation: '" + filepath + ".png'");
 			clip = new BufferedImage[0];
 		}
 	}

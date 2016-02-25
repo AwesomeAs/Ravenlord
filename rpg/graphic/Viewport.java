@@ -66,6 +66,11 @@ public class Viewport {
 				for (int i = 0; i < d.length; i++) {
 					if (d[i] instanceof Clickable) {
 						panel.add(((Clickable)d[i]).getButton());
+						if (d[i] instanceof LTextfield) {
+							System.out.println("Hello");
+							panel.add(((LTextfield)d[i]).getTextfield());
+							System.out.println(((LTextfield)d[i]).getTextfield().getParent());
+						}
 					}
 				}
 			}
@@ -101,6 +106,8 @@ public class Viewport {
 						panel.remove(((Clickable)d[i]).getButton());
 						if (d[i] instanceof LButton) {
 							((LButton)d[i]).setHovered(false);
+						} else if (d[i] instanceof LTextfield) {
+							panel.remove(((LTextfield)d[i]).getTextfield());
 						}
 					}
 				}
