@@ -1,5 +1,6 @@
 package graphic;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -66,11 +67,10 @@ public class Viewport {
 				for (int i = 0; i < d.length; i++) {
 					if (d[i] instanceof Clickable) {
 						panel.add(((Clickable)d[i]).getButton());
-						if (d[i] instanceof LTextfield) {
-							System.out.println("Hello");
-							panel.add(((LTextfield)d[i]).getTextfield());
-							System.out.println(((LTextfield)d[i]).getTextfield().getParent());
-						}
+					} else if (d[i] instanceof LTextfield) {
+						System.out.println("Hello");
+						panel.add(((LTextfield)d[i]).getTextfield());
+						System.out.println(((LTextfield)d[i]).getTextfield().getParent());
 					}
 				}
 			}
@@ -78,11 +78,11 @@ public class Viewport {
 	}
 	
 	public int getWidth() {
-		return 832;
+		return frame.getExtendedState() == JFrame.MAXIMIZED_BOTH ? frame.getWidth() : 832;
 	}
 	
 	public int getHeight() {
-		return 640;
+		return frame.getExtendedState() == JFrame.MAXIMIZED_BOTH ? frame.getHeight() : 640;
 	}
 	
 	public void addToPanel(JButton button) {
@@ -106,9 +106,11 @@ public class Viewport {
 						panel.remove(((Clickable)d[i]).getButton());
 						if (d[i] instanceof LButton) {
 							((LButton)d[i]).setHovered(false);
-						} else if (d[i] instanceof LTextfield) {
-							panel.remove(((LTextfield)d[i]).getTextfield());
+						} else if (d[i] instanceof LToggle) {
+							((LToggle)d[i]).setHovered(false);
 						}
+					} else if (d[i] instanceof LTextfield) {
+						panel.remove(((LTextfield)d[i]).getTextfield());
 					}
 				}
 			}
@@ -123,14 +125,10 @@ public class Viewport {
 	 */
 	public void setFullscreen(boolean fs) {
 		if (fs) {
-			frame.setVisible(false);
 			frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-			frame.setVisible(true);
 			panel.setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
 		} else {
-			frame.setVisible(false);
-			frame.setExtendedState(JFrame.NORMAL); 
-			frame.setVisible(true);
+			frame.setExtendedState(JFrame.NORMAL);
 			panel.setPreferredSize(new Dimension(832, 640));
 		}
 	}
@@ -156,7 +154,8 @@ public class Viewport {
 		public void paintComponent(Graphics g) {
 			Graphics2D g2d = (Graphics2D)g;
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			g2d.clearRect(0, 0, getWidth(), getHeight());
+			g2d.setColor(Color.black);
+			g2d.fillRect(0, 0, getWidth(), getHeight());
 			Hashtable<Integer, ArrayList<Drawable>> crender = new Hashtable<Integer, ArrayList<Drawable>>();
 			ArrayList<Integer> zindexes = new ArrayList<Integer>();
 			

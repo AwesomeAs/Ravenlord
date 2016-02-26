@@ -179,7 +179,7 @@ public class WSDAPI {
 	 */
 	public boolean isOnline() {
 		for(HttpCookie c : cookieManager.getCookieStore().getCookies()) {
-			if (c.getPath().equals(endpoint) && c.getName().equals("ForumSecurity") && c.getValue().length() > 12) {
+			if (c.getName().equals("ForumSecurity") && c.getValue().length() > 12) {
 				return true;
 			}
 		}

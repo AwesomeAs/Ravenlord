@@ -1,14 +1,22 @@
 package game;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import graphic.Group;
 import graphic.Viewport;
 import graphic.map.*;
 import graphic.ui.*;
+import wsd_api.*;
 
 public class Main {
 
 	public static void main(String[] args) {
 		Viewport view = Viewport.getInstance();
+		WSDAPI userAPI = WSDAPI.getInstance();
+		userAPI.logout();
 		Group mainbg_g = new Group();
 		for (int x = 0; x < 800; x += 64) {
 			for (int y = 0; y < 600; y += 64) {
@@ -30,8 +38,8 @@ public class Main {
 		view.add(mainbg_g);
 		
 		Group game_map = new Group();
-		for (int x = 0; x < 800; x += 64) {
-			for (int y = 0; y < 600; y += 64) {
+		for (int x = 0; x < 2500; x += 64) {
+			for (int y = 0; y < 1400; y += 64) {
 				game_map.add(new Grass(x, y));
 			}
 		}
@@ -53,8 +61,14 @@ public class Main {
 
 			@Override
 			public void onClick() {
-				view.remove(main_g);
-				view.add(login_g);
+				if (userAPI.isOnline()) {
+					view.remove(main_g);
+					view.remove(mainbg_g);
+					view.add(game_map);
+				} else {
+					view.remove(main_g);
+					view.add(login_g);
+				}
 			}
 			
 		}));
@@ -115,18 +129,40 @@ public class Main {
 		login_g.add(new LText("", view.getWidth() / 2 - 296, view.getHeight() / 2 - 220).setSize(592, 220));
 		login_g.add(new LText("Login", view.getWidth() / 2 - 286, view.getHeight() / 2 - 210, 48, 0f).setSize(572, 50));
 		login_g.add(new LText("Username:", view.getWidth() / 2 - 286, view.getHeight() / 2 - 160, 28, 0f).setSize(572, 30));
-		login_g.add(new LTextfield(view.getWidth() / 2 - 186, view.getHeight() / 2 - 140));
+		login_g.add(new LTextfield(view.getWidth() / 2 - 186, view.getHeight() / 2 - 140, 24, false));
 		login_g.add(new LText("Password:", view.getWidth() / 2 - 286, view.getHeight() / 2 - 110, 28, 0f).setSize(572, 30));
-		login_g.add(new LTextfield(view.getWidth() / 2 - 186, view.getHeight() / 2 - 90));
-		login_g.add(new LText("", view.getWidth() / 2 - 286, view.getHeight() / 2 - 70, 22, 0f).setSize(572, 30));
+		login_g.add(new LTextfield(view.getWidth() / 2 - 186, view.getHeight() / 2 - 90, 24, true));
+		login_g.add(new LText("", view.getWidth() / 2 - 286, view.getHeight() / 2 - 60, 22, 0f).setSize(572, 30));
+		login_g.add(new LButton("Create account", view.getWidth() / 2 + 196, view.getHeight() / 2 - 40, false, 22)
+				.setBGActive(false).setSize(85, 20).setCallback(new ButtonCallback() {
+
+					@Override
+					public void onClick() {
+						try {
+							Desktop.getDesktop().browse(new URI("http://www.whysodanish.com/Forum/register.php"));
+						} catch (IOException | URISyntaxException e) {
+						}
+					}
+					
+				}));
 		
 		login_g.add(new LButton("Login", view.getWidth() / 2 - 326, view.getHeight() / 2 + 50, true).setSize(332, 64).setCallback(new ButtonCallback() {
 
 			@Override
 			public void onClick() {
-				view.remove(login_g);
-				view.remove(mainbg_g);
-				view.add(game_map);
+				
+				APIResponse resp = userAPI.login(
+						((LTextfield)login_g.getObjects()[3]).getText(),
+						((LTextfield)login_g.getObjects()[5]).getText()
+				);
+				
+				if (resp.success()) {
+					view.remove(login_g);
+					view.remove(mainbg_g);
+					view.add(game_map);
+				} else {
+					((LText)login_g.getObjects()[6]).setText(resp.getError());
+				}
 			}
 			
 		}));

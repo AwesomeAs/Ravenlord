@@ -6,9 +6,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 
-import graphic.Drawable;
-
-public abstract class Clickable extends Drawable {
+public abstract class Clickable extends UIElement {
 	
 	protected CustomButton button = new CustomButton();
 	protected ButtonCallback bclb;

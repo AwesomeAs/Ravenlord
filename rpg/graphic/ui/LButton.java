@@ -15,12 +15,13 @@ public class LButton extends Clickable {
 	
 	private boolean hovered = false;
 	private ImageIcon img;
+	private boolean imgactive = true;
 	private String text;
 	private Font font;
 	
-	public LButton(String text, int x, int y, boolean small) {
+	public LButton(String text, int x, int y, boolean small, int fontSize) {
 		img = new ImageIcon(small ? "resources/ui/MainSB.png" : "resources/ui/MainB.png");
-		font = new FontManager("Amatic-Bold.ttf", 32).get();
+		font = new FontManager("Amatic-Bold.ttf", fontSize).get();
 		LButton diz = this;
 		this.text = text;
 		super.setPosition(x, y);
@@ -58,8 +59,17 @@ public class LButton extends Clickable {
 		super.button.setLocation((int)getX(), (int)getY());
 	}
 	
+	public LButton(String text, int x, int y, boolean small) {
+		this(text, x, y, small, 32);
+	}
+	
 	public LButton(String text, int x, int y) {
 		this(text, x, y, false);
+	}
+	
+	public LButton setBGActive(boolean active) {
+		imgactive = active;
+		return this;
 	}
 	
 	public LButton setSize(int width, int height) {
@@ -76,8 +86,10 @@ public class LButton extends Clickable {
 		//g.setColor(hovered ? new Color(255, 255, 255, 100) : new Color(0, 0, 0, 100));
 		//g.fillRoundRect(0, 0, super.button.getWidth(), super.button.getHeight(), 5, 5);
 		g.setClip(0, 0, button.getWidth(), button.getHeight());
-		g.drawImage(img.getImage(), 0, hovered ? -128 : 0, button.getWidth(), button.getHeight() * 4,
-				img.getImageObserver());
+		if (imgactive) {
+			g.drawImage(img.getImage(), 0, hovered ? -128 : 0, button.getWidth(), button.getHeight() * 4,
+					img.getImageObserver());
+		}
 		g.setColor(new Color(1f, 1f, 1f));
 		g.setFont(font);
 		g.drawString(text, button.getWidth() / 2 - g.getFontMetrics().stringWidth(text) / 2, button.getHeight() / 2 + 10);

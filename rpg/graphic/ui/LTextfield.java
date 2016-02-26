@@ -1,17 +1,22 @@
 package graphic.ui;
 
+import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JTextField;
+import javax.swing.text.Caret;
 
-import graphic.Drawable;
 import javafx.geometry.Insets;
 import util.FontManager;
 
-public class LTextfield extends Drawable {
+public class LTextfield extends UIElement {
 	
 	private CustomTextfield textfield = new CustomTextfield();
 	private String text = "";
@@ -20,6 +25,7 @@ public class LTextfield extends Drawable {
 	private int height = 30;
 	private Insets padding = new Insets(10);
 	private boolean isPassword = false;
+	private boolean hovered = false;
 	
 	public LTextfield(int x, int y, int fontSize, boolean isPassword) {
 		font = new FontManager("Amatic-Bold.ttf", fontSize).get();
@@ -28,6 +34,17 @@ public class LTextfield extends Drawable {
 		super.setZIndex(20);
 		textfield.setSize(400, 30);
 		textfield.setLocation(x, y);
+		Toolkit.getDefaultToolkit().addAWTEventListener(
+		          new AWTEventListener() {
+
+					@Override
+					public void eventDispatched(AWTEvent arg) {
+						if (arg.getID() == 501 && !hovered) {
+							textfield.transferFocus();
+						}
+					}
+		        	  
+		          }, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.FOCUS_EVENT_MASK);
 	}
 	
 	public LTextfield(int x, int y) {
@@ -64,7 +81,7 @@ public class LTextfield extends Drawable {
 		g.fillRoundRect(0, 0, width, height, 6, 6);
 		g.setFont(font);
 		int x = (int)padding.getLeft();
-		int y = (int)padding.getTop() + 30;
+		int y = (int)padding.getTop() + 14;
 		
 		text = textfield.getText();
 		
@@ -77,6 +94,8 @@ public class LTextfield extends Drawable {
 		} else {
 			line = text;
 		}
+		Caret caret = textfield.getCaret();
+		line = line.substring(0, textfield.getCaretPosition()) + (caret.isVisible() ? "|" : "") + line.substring(textfield.getCaretPosition());
 		
 		g.setColor(new Color(0f, 0f, 0f, 0.7f));
 		g.drawString(line, x + 1, y + 1);
@@ -90,11 +109,38 @@ public class LTextfield extends Drawable {
 		
 		private CustomTextfield() {
 			setBorder(null);
+			addMouseListener(new MouseListener() {
+
+				@Override
+				public void mouseClicked(MouseEvent e) {
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					hovered = true;
+				}
+
+				@Override
+				public void mouseExited(MouseEvent e) {
+					hovered = false;
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+				}
+				
+			});
 		}
 		
 		public void paintComponent(Graphics g) { 
 			// invisible
 		}
+		
+		
 		
 	}
 

@@ -4,11 +4,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
-import graphic.Drawable;
 import javafx.geometry.Insets;
 import util.FontManager;
 
-public class LText extends Drawable {
+public class LText extends UIElement {
 	
 	private String text;
 	private Font font;
