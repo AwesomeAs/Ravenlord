@@ -20,7 +20,7 @@ public abstract class Clickable extends UIElement {
 		return this;
 	}
 	
-	protected class CustomButton extends JButton implements MouseListener {
+	public class CustomButton extends JButton implements MouseListener {
 		private static final long serialVersionUID = 1L;
 		
 		private CustomButton() {

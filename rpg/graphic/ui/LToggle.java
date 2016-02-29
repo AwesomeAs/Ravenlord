@@ -13,10 +13,11 @@ public class LToggle extends Clickable {
 	private boolean active = false;
 	private ImageIcon img;
 	
-	public LToggle(int x, int y, boolean active) {
+	public LToggle(AnchorPoint anchor, int x, int y, boolean active) {
 		img = new ImageIcon("resources/ui/MainT.png");
 		this.active = active;
 		LToggle diz = this;
+		super.setAnchor(anchor);
 		super.setPosition(x, y);
 		super.setZIndex(20);
 		super.button.setCursor(new Cursor(Cursor.HAND_CURSOR));

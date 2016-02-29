@@ -16,16 +16,25 @@ public class LText extends UIElement {
 	private float bgAlpha = 0.7f;
 	private Insets padding = new Insets(10);
 	
-	public LText(String text, int x, int y, int fontSize, float bgAlpha) {
+	public LText(String text, AnchorPoint anchor, int x, int y, int fontSize, float bgAlpha) {
 		font = new FontManager("Amatic-Bold.ttf", fontSize).get();
 		this.text = text;
 		this.bgAlpha = bgAlpha;
+		super.setAnchor(anchor);
 		super.setPosition(x, y);
 		super.setZIndex(20);
 	}
 	
+	public LText(String text, int x, int y, int fontSize, float bgAlpha) {
+		this(text, AnchorPoint.TOP_LEFT, x, y, fontSize, bgAlpha);
+	}
+	
+	public LText(String text, AnchorPoint anchor, int x, int y) {
+		this(text, anchor, x, y, 32, 0.5f);
+	}
+	
 	public LText(String text, int x, int y) {
-		this(text, x, y, 32, 0.5f);
+		this(text, AnchorPoint.TOP_LEFT, x, y);
 	}
 	
 	public LText setBorder(int top, int left, int bottom, int right) {

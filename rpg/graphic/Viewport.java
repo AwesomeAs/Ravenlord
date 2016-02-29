@@ -29,6 +29,7 @@ public class Viewport {
 	private static Viewport instance;
 	private JFrame frame;
 	private CustomPanel panel;
+	private Drawable viewAnchor;
 	
 	private ArrayList<Drawable> render;
 	
@@ -68,9 +69,7 @@ public class Viewport {
 					if (d[i] instanceof Clickable) {
 						panel.add(((Clickable)d[i]).getButton());
 					} else if (d[i] instanceof LTextfield) {
-						System.out.println("Hello");
 						panel.add(((LTextfield)d[i]).getTextfield());
-						System.out.println(((LTextfield)d[i]).getTextfield().getParent());
 					}
 				}
 			}
@@ -83,6 +82,10 @@ public class Viewport {
 	
 	public int getHeight() {
 		return frame.getExtendedState() == JFrame.MAXIMIZED_BOTH ? frame.getHeight() : 640;
+	}
+	
+	public void setViewAnchor(Drawable anchor) {
+		viewAnchor = anchor;
 	}
 	
 	public void addToPanel(JButton button) {
@@ -226,12 +229,62 @@ public class Viewport {
 			for (int i = 0; i < zindexes.size(); i++) {
 				for (int j = 0; j < crender.get(zindexes.get(i)).size(); j++) {
 					Drawable o = crender.get(zindexes.get(i)).get(j);
-					// TODO: Set screen position for the object.
 					double x = o.getX();
 					double y = o.getY() - o.getGroundOffset();
-					g2d.translate(x, y);
-					o.onDraw(g2d);
-					g2d.translate(-x, -y);
+					if (o instanceof UIElement) {
+						int x_off = 0;
+						int y_off = 0;
+						switch (((UIElement)o).getAnchor()) {
+						case BOTTOM_CENTER:
+							x_off = getWidth() / 2;
+							y_off = getHeight();
+							break;
+						case BOTTOM_LEFT:
+							y_off = getHeight();
+							break;
+						case BOTTOM_RIGHT:
+							x_off = getWidth();
+							y_off = getHeight();
+							break;
+						case CENTER:
+							x_off = getWidth() / 2;
+							y_off = getHeight() / 2;
+							break;
+						case CENTER_LEFT:
+							y_off = getHeight() / 2;
+							break;
+						case CENTER_RIGHT:
+							x_off = getWidth();
+							y_off = getHeight() / 2;
+							break;
+						case TOP_CENTER:
+							x_off = getWidth() / 2;
+							break;
+						case TOP_RIGHT:
+							x_off = getWidth();
+							break;
+						default:
+							break;
+						}
+						if (o instanceof Clickable) {
+							((Clickable)o).getButton().setLocation((int)(x_off + x), (int)(y_off + y));
+						} else if (o instanceof LTextfield) {
+							((LTextfield)o).getTextfield().setLocation((int)(x_off + x) + 8, (int)(y_off + y));
+						}
+						g2d.translate(x_off + x, y_off + y);
+						o.onDraw(g2d);
+						g2d.translate(-x_off - x, -y_off - y);
+					} else {
+						int x_off = getWidth() / 2;
+						int y_off = getHeight() / 2;
+						if (viewAnchor != null) {
+							x_off += viewAnchor.getX();
+							y_off += viewAnchor.getY();
+						}
+						g2d.translate(x + x_off, y + y_off);
+						o.onDraw(g2d);
+						g2d.translate(-x - x_off, -y - y_off);
+					}
 				}
 			}
 			

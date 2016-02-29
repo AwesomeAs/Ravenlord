@@ -19,11 +19,12 @@ public class LButton extends Clickable {
 	private String text;
 	private Font font;
 	
-	public LButton(String text, int x, int y, boolean small, int fontSize) {
+	public LButton(String text, AnchorPoint anchor, int x, int y, boolean small, int fontSize) {
 		img = new ImageIcon(small ? "resources/ui/MainSB.png" : "resources/ui/MainB.png");
 		font = new FontManager("Amatic-Bold.ttf", fontSize).get();
 		LButton diz = this;
 		this.text = text;
+		super.setAnchor(anchor);
 		super.setPosition(x, y);
 		super.setZIndex(20);
 		super.button.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -59,12 +60,16 @@ public class LButton extends Clickable {
 		super.button.setLocation((int)getX(), (int)getY());
 	}
 	
-	public LButton(String text, int x, int y, boolean small) {
-		this(text, x, y, small, 32);
+	public LButton(String text, AnchorPoint anchor, int x, int y, boolean small) {
+		this(text, anchor, x, y, small, 32);
+	}
+	
+	public LButton(String text, AnchorPoint anchor, int x, int y) {
+		this(text, anchor, x, y, false);
 	}
 	
 	public LButton(String text, int x, int y) {
-		this(text, x, y, false);
+		this(text, AnchorPoint.TOP_LEFT, x, y);
 	}
 	
 	public LButton setBGActive(boolean active) {
@@ -83,8 +88,6 @@ public class LButton extends Clickable {
 	
 	@Override
 	public void onDraw(Graphics2D g) {
-		//g.setColor(hovered ? new Color(255, 255, 255, 100) : new Color(0, 0, 0, 100));
-		//g.fillRoundRect(0, 0, super.button.getWidth(), super.button.getHeight(), 5, 5);
 		g.setClip(0, 0, button.getWidth(), button.getHeight());
 		if (imgactive) {
 			g.drawImage(img.getImage(), 0, hovered ? -128 : 0, button.getWidth(), button.getHeight() * 4,
@@ -94,7 +97,6 @@ public class LButton extends Clickable {
 		g.setFont(font);
 		g.drawString(text, button.getWidth() / 2 - g.getFontMetrics().stringWidth(text) / 2, button.getHeight() / 2 + 10);
 		g.setClip(null);
-		//g.drawImage(img.getImage(), 0, 0, 200, 50, 700, 256, 200, 50, img.getImageObserver());
 	}
 
 }

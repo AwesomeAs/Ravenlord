@@ -13,9 +13,10 @@ public class LSlider extends Clickable {
 	private boolean active = false;
 	private float value = 1f;
 	
-	public LSlider(int x, int y, float value) {
+	public LSlider(AnchorPoint anchor, int x, int y, float value) {
 		this.value = value;
 		LSlider diz = this;
+		super.setAnchor(anchor);
 		super.setPosition(x, y);
 		super.setZIndex(20);
 		super.button.setCursor(new Cursor(Cursor.HAND_CURSOR));
