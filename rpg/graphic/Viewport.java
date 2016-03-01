@@ -4,7 +4,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.RenderingHints;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,6 +34,7 @@ public class Viewport {
 	private JFrame frame;
 	private CustomPanel panel;
 	private Drawable viewAnchor;
+	private KeyListener keylistener;
 	
 	private ArrayList<Drawable> render;
 	
@@ -54,6 +59,8 @@ public class Viewport {
 		URL iconUrl = getClass().getClassLoader().getResource("icon.png");
 		frame.setIconImage(new ImageIcon(iconUrl).getImage());
 		frame.setVisible(true);
+		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        manager.addKeyEventDispatcher(new KeyEvtDispatcher());
 	}
 	
 	/**
@@ -76,18 +83,51 @@ public class Viewport {
 		}
 	}
 	
+	/**
+	 * Checks if this drawable object is currently being rendered.
+	 * @param obj
+	 * @return boolean indicating if the drawable is being rendered.
+	 */
+	public boolean has(Drawable obj) {
+		return render.contains(obj);
+	}
+	
+	/**
+	 * Adds a key event listener for the game's window.
+	 * @param event listener
+	 */
+	public void addKeyListener(KeyListener e) {
+		keylistener = e;
+	}
+	
+	/**
+	 * Gets the width of the game's window.
+	 * @return width in pixels
+	 */
 	public int getWidth() {
 		return frame.getExtendedState() == JFrame.MAXIMIZED_BOTH ? frame.getWidth() : 832;
 	}
 	
+	/**
+	 * Gets the height of the game's window.
+	 * @return height in pixels
+	 */
 	public int getHeight() {
 		return frame.getExtendedState() == JFrame.MAXIMIZED_BOTH ? frame.getHeight() : 640;
 	}
 	
+	/**
+	 * The game will render with this element in the center of the window.
+	 * @param anchor
+	 */
 	public void setViewAnchor(Drawable anchor) {
 		viewAnchor = anchor;
 	}
 	
+	/**
+	 * Adds a button to the game. Used for adding UI button interaction.
+	 * @param button
+	 */
 	public void addToPanel(JButton button) {
 		panel.add(button);
 	}
@@ -128,12 +168,39 @@ public class Viewport {
 	 */
 	public void setFullscreen(boolean fs) {
 		if (fs) {
-			frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+			frame.dispose();
+			frame.setUndecorated(true);
+			frame.pack();
+			frame.setVisible(true);
+			frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 			panel.setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
 		} else {
+			frame.dispose();
+			frame.setUndecorated(false);
+			panel.setPreferredSize(new Dimension(832, 640));
+			frame.pack();
+			frame.setVisible(true);
 			frame.setExtendedState(JFrame.NORMAL);
 			panel.setPreferredSize(new Dimension(832, 640));
 		}
+	}
+	
+	private class KeyEvtDispatcher implements KeyEventDispatcher {
+
+		@Override
+		public boolean dispatchKeyEvent(KeyEvent e) {
+			if (keylistener != null) {
+				if (e.getID() == KeyEvent.KEY_PRESSED) {
+					keylistener.keyPressed(e);
+				} else if (e.getID() == KeyEvent.KEY_RELEASED) {
+					keylistener.keyReleased(e);
+				} else if (e.getID() == KeyEvent.KEY_TYPED) {
+					keylistener.keyTyped(e);
+				}
+			}
+			return false;
+		}
+
 	}
 	
 	private class CustomPanel extends JPanel {

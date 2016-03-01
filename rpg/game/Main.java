@@ -1,6 +1,8 @@
 package game;
 
 import java.awt.Desktop;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,7 +36,7 @@ public class Main {
 		for (int x = -384; x < 384; x += 64) {
 			mainbg_g.add(new CobbleWall(x, 256 - 64, (x > -384 ? (x < 384 - 64 ? "CBM" : "CBR") : "CBL")));
 		}
-		mainbg_g.add(new Fireplace(-384 + 64, 640 - 128));
+		mainbg_g.add(new Fireplace(-384 + 64, 192));
 		view.add(mainbg_g);
 		
 		Group game_map = new Group();
@@ -57,6 +59,35 @@ public class Main {
 		Group cred_g = new Group();
 		Group sett_g = new Group();
 		Group login_g = new Group();
+		
+		view.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					if (view.has(main_g)) {
+						System.exit(0);
+					} else {
+						view.remove(game_map);
+						view.remove(cred_g);
+						view.remove(sett_g);
+						view.remove(login_g);
+						view.add(mainbg_g);
+						view.add(main_g);
+					}
+				}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+			
+		});
+		
 		main_g.add(new LButton("Play game", AnchorPoint.CENTER, -286, -82).setSize(572, 64).setCallback(new ButtonCallback() {
 
 			@Override
