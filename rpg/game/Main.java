@@ -146,7 +146,19 @@ public class Main {
 		}));
 		sett_g.add(new LText("Settings", AnchorPoint.CENTER, -286, -210, 48, 0f).setSize(572, 50));
 		sett_g.add(new LText("Brightness", AnchorPoint.CENTER, -286, -160, 28, 0f).setSize(572, 30));
-		sett_g.add(new LSlider(AnchorPoint.CENTER, -150, -135, 0.5f));
+		sett_g.add(new LSlider(AnchorPoint.CENTER, -150, -135, 0.5f).addChangeListener(new ButtonCallback() {
+
+			@Override
+			public void onClick() {
+			}
+			
+			@Override
+			public void onClick(Object... caller) {
+				game_map.setDarkness(0.95f - ((LSlider)caller[0]).getValue() * 0.65f);
+				game_map.setLightFactor(Math.min(1f, ((LSlider)caller[0]).getValue() * 2f));
+			}
+			
+		}));
 		sett_g.add(new LText("Craze mode", AnchorPoint.CENTER, -286, -120, 28, 0f).setSize(572, 30));
 		sett_g.add(new LToggle(AnchorPoint.CENTER, -150, -110, false));
 		sett_g.add(new LText("Fullscreen", AnchorPoint.CENTER, -286, -80, 28, 0f).setSize(572, 30));

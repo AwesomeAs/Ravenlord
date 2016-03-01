@@ -390,7 +390,7 @@ public class Viewport {
 						for (int k = 0; k < crender.get(zindexes.get(j)).size(); k++) {
 							Drawable o = crender.get(zindexes.get(j)).get(k);
 							if (o instanceof LightSource) {
-								dg.setComposite(AlphaComposite.getInstance(AlphaComposite.XOR, 1.0f));
+								dg.setComposite(AlphaComposite.getInstance(AlphaComposite.XOR, map.getLightFactor()));
 								LightSource l = (LightSource)o;
 								RadialGradientPaint p = new RadialGradientPaint(
 										(float)l.getX() + x_off + l.getRange(), (float)l.getY() + y_off + l.getRange(),

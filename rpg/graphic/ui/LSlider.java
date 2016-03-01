@@ -12,6 +12,8 @@ public class LSlider extends Clickable {
 	private boolean hovered = false;
 	private boolean active = false;
 	private float value = 1f;
+	private float oldvalue = value;
+	private ButtonCallback changecallback;
 	
 	public LSlider(AnchorPoint anchor, int x, int y, float value) {
 		this.value = value;
@@ -54,6 +56,10 @@ public class LSlider extends Clickable {
 		super.button.setLocation((int)getX(), (int)getY());
 	}
 	
+	public float getValue() {
+		return value;
+	}
+	
 	public LSlider setSize(int width, int height) {
 		super.button.setSize(width, height);
 		return this;
@@ -62,12 +68,21 @@ public class LSlider extends Clickable {
 	public void setHovered(boolean hovered) {
 		this.hovered = hovered;
 	}
+	
+	public LSlider addChangeListener(ButtonCallback e) {
+		changecallback = e;
+		return this;
+	}
 
 	@Override
 	public void onDraw(Graphics2D g, float delta) {
 		if (active && button.getParent() != null) {
 			int x = MouseInfo.getPointerInfo().getLocation().x - button.getLocationOnScreen().x;
 			value = Math.max(0f, Math.min(1f, (x - 3f) / (button.getWidth() - 6f)));
+		}
+		if (changecallback != null && value != oldvalue) {
+			changecallback.onClick(this);
+			oldvalue = value;
 		}
 		g.setClip(0, 0, button.getWidth(), button.getHeight());
 		g.setColor(Color.white);
