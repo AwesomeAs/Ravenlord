@@ -10,6 +10,7 @@ import java.awt.event.MouseListener;
 import javax.swing.ImageIcon;
 
 import util.FontManager;
+import util.ImageManager;
 
 public class LButton extends Clickable {
 	
@@ -20,8 +21,8 @@ public class LButton extends Clickable {
 	private Font font;
 	
 	public LButton(String text, AnchorPoint anchor, int x, int y, boolean small, int fontSize) {
-		img = new ImageIcon(small ? "resources/ui/MainSB.png" : "resources/ui/MainB.png");
-		font = new FontManager("Amatic-Bold.ttf", fontSize).get();
+		img = ImageManager.getInstance().get(small ? "resources/ui/MainSB.png" : "resources/ui/MainB.png");
+		font = FontManager.getInstance().get("Amatic-Bold.ttf", fontSize);
 		LButton diz = this;
 		this.text = text;
 		super.setAnchor(anchor);
@@ -87,7 +88,7 @@ public class LButton extends Clickable {
 	}
 	
 	@Override
-	public void onDraw(Graphics2D g) {
+	public void onDraw(Graphics2D g, float delta) {
 		g.setClip(0, 0, button.getWidth(), button.getHeight());
 		if (imgactive) {
 			g.drawImage(img.getImage(), 0, hovered ? -128 : 0, button.getWidth(), button.getHeight() * 4,

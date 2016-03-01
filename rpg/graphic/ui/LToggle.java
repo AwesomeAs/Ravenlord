@@ -68,7 +68,7 @@ public class LToggle extends Clickable {
 	}
 
 	@Override
-	public void onDraw(Graphics2D g) {
+	public void onDraw(Graphics2D g, float delta) {
 		g.setClip(0, 0, button.getWidth(), button.getHeight());
 		g.drawImage(img.getImage(), active ? 0 : -34, hovered ? -34 : 0, button.getWidth() * 2, button.getHeight() * 2, img.getImageObserver());
 		g.setClip(null);

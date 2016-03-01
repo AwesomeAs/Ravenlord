@@ -32,7 +32,7 @@ public class LTextfield extends UIElement {
 	private Pattern validator;
 	
 	public LTextfield(AnchorPoint anchor, int x, int y, int fontSize, boolean isPassword) {
-		font = new FontManager("Amatic-Bold.ttf", fontSize).get();
+		font = FontManager.getInstance().get("Amatic-Bold.ttf", fontSize);
 		this.isPassword = isPassword;
 		super.setAnchor(anchor);
 		super.setPosition(x, y);
@@ -91,7 +91,7 @@ public class LTextfield extends UIElement {
 	}
 	
 	@Override
-	public void onDraw(Graphics2D g) {
+	public void onDraw(Graphics2D g, float delta) {
 		g.setColor(new Color(0f, 0f, 0f, 0.5f));
 		g.fillRoundRect(0, 0, width, height, 6, 6);
 		g.setFont(font);

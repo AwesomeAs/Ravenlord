@@ -17,7 +17,7 @@ public class LText extends UIElement {
 	private Insets padding = new Insets(10);
 	
 	public LText(String text, AnchorPoint anchor, int x, int y, int fontSize, float bgAlpha) {
-		font = new FontManager("Amatic-Bold.ttf", fontSize).get();
+		font = FontManager.getInstance().get("Amatic-Bold.ttf", fontSize);
 		this.text = text;
 		this.bgAlpha = bgAlpha;
 		super.setAnchor(anchor);
@@ -53,7 +53,7 @@ public class LText extends UIElement {
 	}
 	
 	@Override
-	public void onDraw(Graphics2D g) {
+	public void onDraw(Graphics2D g, float delta) {
 		g.setColor(new Color(0f, 0f, 0f, bgAlpha));
 		g.fillRoundRect(0, 0, width, height, 5, 5);
 		g.setFont(font);

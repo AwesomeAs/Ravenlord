@@ -8,22 +8,13 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
- * 
- * Utility class for fetching and loading in fonts used by the Orbit
- * package.
- * 
- * Java 1.7
- * 
- */
-
 public class FontManager {
 	
-	protected Font font;
-	protected int size;
-	protected String path;
+	private static FontManager self;
+	private HashMap<String, Font> fonts = new HashMap<String, Font>();
 	
-	protected void loadFont() {
+	private Font loadFont(String path, int size) {
+		Font font = null;
 		InputStream fontStream = getClass().getClassLoader().getResourceAsStream("fonts/" + path);
 		try {
 			font = Font.createFont(Font.TRUETYPE_FONT, fontStream);
@@ -39,15 +30,20 @@ public class FontManager {
 		Map<TextAttribute, Object> attr = new HashMap<TextAttribute, Object>();
 		attr.put(TextAttribute.SIZE, size);
 		font = font.deriveFont(attr);
-	}
-	
-	public FontManager(String path, int size) {
-		this.path = path;
-		this.size = size;
-		loadFont();
-	}
-	
-	public Font get() {
 		return font;
+	}
+	
+	public Font get(String path, int size) {
+		if (!fonts.containsKey(path + "|" + size)) {
+			fonts.put(path + "|" + size, loadFont(path, size));
+		}
+		return fonts.get(path + "|" + size);
+	}
+	
+	public static FontManager getInstance() {
+		if (self == null) {
+			self = new FontManager();
+		}
+		return self;
 	}
 }

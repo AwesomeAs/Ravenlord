@@ -7,6 +7,8 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
+import util.ImageManager;
+
 public class Animation {
 	
 	private BufferedImage[] clip;
@@ -53,7 +55,7 @@ public class Animation {
 	public Animation(String filepath, int imgwidth, double imgduration) {
 		this.imgduration = imgduration;
 		if (new File("resources/" + filepath + ".png").exists()) {
-			ImageIcon img = new ImageIcon("resources/" + filepath + ".png");
+			ImageIcon img = ImageManager.getInstance().get("resources/" + filepath + ".png");
 			int length = (int)((float)img.getIconWidth() / imgwidth);
 			clip = new BufferedImage[length];
 			int height = img.getIconHeight();
@@ -91,6 +93,16 @@ public class Animation {
 	public BufferedImage getImage() {
 		if (clip.length > 0) {
 			index += (1 / imgduration);
+			index = index % clip.length;
+			return clip[(int)index];
+		} else {
+			return null;
+		}
+	}
+	
+	public BufferedImage getImage(float delta) {
+		if (clip.length > 0) {
+			index += (delta / imgduration);
 			index = index % clip.length;
 			return clip[(int)index];
 		} else {

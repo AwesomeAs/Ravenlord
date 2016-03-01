@@ -64,7 +64,7 @@ public class LSlider extends Clickable {
 	}
 
 	@Override
-	public void onDraw(Graphics2D g) {
+	public void onDraw(Graphics2D g, float delta) {
 		if (active && button.getParent() != null) {
 			int x = MouseInfo.getPointerInfo().getLocation().x - button.getLocationOnScreen().x;
 			value = Math.max(0f, Math.min(1f, (x - 3f) / (button.getWidth() - 6f)));
