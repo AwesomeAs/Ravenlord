@@ -7,8 +7,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import graphic.Group;
-import graphic.Viewport;
+import graphic.*;
 import graphic.map.*;
 import graphic.ui.*;
 import graphic.ui.UIElement.AnchorPoint;
@@ -39,7 +38,8 @@ public class Main {
 		mainbg_g.add(new Fireplace(-384 + 64, 192));
 		view.add(mainbg_g);
 		
-		Group game_map = new Group();
+		Map game_map = new Map();
+		game_map.setDarkness(0.75f);
 		for (int x = -40 * 64; x < 40 * 64; x += 64) {
 			for (int y = -30 * 64; y < 30 * 64; y += 64) {
 				game_map.add(new Grass(x, y));
@@ -54,6 +54,8 @@ public class Main {
 		game_map.add(new TreeG(-12 * 64, -7 * 64, 3));
 		game_map.add(new Fireplace(-5 * 64, 1 * 64));
 		game_map.add(new Fireplace(5 * 64, 4 * 64));
+		game_map.add(new LightSource(-5 * 64, 1 * 64));
+		game_map.add(new LightSource(5 * 64, 4 * 64));
 		
 		Group main_g = new Group();
 		Group cred_g = new Group();

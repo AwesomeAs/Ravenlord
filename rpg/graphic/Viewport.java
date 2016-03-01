@@ -1,14 +1,17 @@
 package graphic;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
+import java.awt.RadialGradientPaint;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -20,7 +23,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import graphic.map.*;
 import graphic.ui.*;
+import util.ImageManager;
 
 /**
  * Viewport for sorting drawable objects and calling onDraw on them.
@@ -37,6 +42,7 @@ public class Viewport {
 	private KeyListener keylistener;
 	
 	private ArrayList<Drawable> render;
+	private long time = System.currentTimeMillis();
 	
 	/**
 	 * Gets the singleton instance.
@@ -229,6 +235,8 @@ public class Viewport {
 			Hashtable<Integer, ArrayList<Drawable>> crender = new Hashtable<Integer, ArrayList<Drawable>>();
 			ArrayList<Integer> zindexes = new ArrayList<Integer>();
 			
+			float delta = (float)Math.pow(System.currentTimeMillis() - time + 0.1, 0.01) / 100f;
+			
 			/**
 			 * Add current Z-indexes and drawables.
 			 */
@@ -339,9 +347,9 @@ public class Viewport {
 							((LTextfield)o).getTextfield().setLocation((int)(x_off + x) + 8, (int)(y_off + y));
 						}
 						g2d.translate(x_off + x, y_off + y);
-						o.onDraw(g2d);
+						o.onDraw(g2d, delta);
 						g2d.translate(-x_off - x, -y_off - y);
-					} else {
+					} else if (!(o instanceof LightSource)) {
 						int x_off = getWidth() / 2;
 						int y_off = getHeight() / 2;
 						if (viewAnchor != null) {
@@ -349,12 +357,68 @@ public class Viewport {
 							y_off += viewAnchor.getY();
 						}
 						g2d.translate(x + x_off, y + y_off);
-						o.onDraw(g2d);
+						o.onDraw(g2d, delta);
 						g2d.translate(-x - x_off, -y - y_off);
 					}
 				}
 			}
 			
+			/**
+			 * Draw map shadowing & lights.
+			 */
+			for (int i = 0; i < iter.length; i++) {
+				if (iter[i] instanceof Map) {
+					Map map = (Map)iter[i];
+					
+					int x_off = getWidth() / 2;
+					int y_off = getHeight() / 2;
+					if (viewAnchor != null) {
+						x_off += viewAnchor.getX();
+						y_off += viewAnchor.getY();
+					}
+					BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+					Graphics2D dg = img.createGraphics();
+					dg.setColor(map.getColor());
+					dg.fillRect(0, 0, getWidth(), getHeight());
+					
+					int mcol_r = map.getColor().getRed();
+					int mcol_g = map.getColor().getGreen();
+					int mcol_b = map.getColor().getBlue();
+					boolean hasLight = false;
+					
+					for (int j = 0; j < zindexes.size(); j++) {
+						for (int k = 0; k < crender.get(zindexes.get(j)).size(); k++) {
+							Drawable o = crender.get(zindexes.get(j)).get(k);
+							if (o instanceof LightSource) {
+								dg.setComposite(AlphaComposite.getInstance(AlphaComposite.XOR, 1.0f));
+								LightSource l = (LightSource)o;
+								RadialGradientPaint p = new RadialGradientPaint(
+										(float)l.getX() + x_off + l.getRange(), (float)l.getY() + y_off + l.getRange(),
+										l.getRange(), l.getFractions(), l.getColor());
+								dg.setPaint(p);
+								dg.fillRect(0, 0, getWidth(), getHeight());
+								hasLight = true;
+							} else if (!(o instanceof UIElement) && hasLight) {
+								int w = getWidth();
+								int h = getHeight();
+								dg.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+								BufferedImage timg = ImageManager.getInstance()
+										.colorImage(o, w, h, x_off, y_off, mcol_r, mcol_g, mcol_b);
+						        dg.drawImage(timg, 0, 0, null);
+							}
+						}
+					}
+					
+					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, map.getDarkness()));
+					
+					dg.dispose();
+					g2d.drawImage(img, 0, 0, null);
+					
+					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+				}
+			}
+			
+			g2d.dispose();
 		}
 		
 	}
@@ -370,8 +434,9 @@ public class Viewport {
 			while (true) {
 				panel.repaint();
 				try {
-					Thread.sleep(10);
+					Thread.sleep(10 - Math.min(10, System.currentTimeMillis() - time));
 				} catch (InterruptedException e) {}
+				time = System.currentTimeMillis();
 			}
 		}
 	}
