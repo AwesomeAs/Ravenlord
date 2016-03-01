@@ -13,12 +13,12 @@ public class Fireplace extends Drawable {
 	public Fireplace(int x, int y) {
 		super.setPosition(x, y);
 		super.setImgHeight(128);
-		anim = new Animation("map/Fireplace0", 64, 10.0);
+		anim = new Animation("map/Fireplace0", 64, 0.2);
 	}
 
 	@Override
-	public void onDraw(Graphics2D g) {
-		BufferedImage img = anim.getImage();
+	public void onDraw(Graphics2D g, float delta) {
+		BufferedImage img = anim.getImage(delta);
 		g.drawImage(img, 0, 0, null);
 	}
 

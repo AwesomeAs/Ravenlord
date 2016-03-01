@@ -16,7 +16,7 @@ public class CobbleWall extends Drawable {
 	}
 
 	@Override
-	public void onDraw(Graphics2D g) {
+	public void onDraw(Graphics2D g, float delta) {
 		BufferedImage img = anim.getImage();
 		g.drawImage(img, 0, 0, null);
 	}

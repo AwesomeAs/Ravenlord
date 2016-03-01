@@ -9,9 +9,7 @@ public class Group extends Drawable {
 	private ArrayList<Object> list = new ArrayList<Object>();
 
 	@Override
-	public void onDraw(Graphics2D g) {
-		// TODO Auto-generated method stub
-		
+	public void onDraw(Graphics2D g, float delta) {
 	}
 	
 	public boolean add(Drawable d) {

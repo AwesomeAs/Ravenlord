@@ -7,7 +7,7 @@ import graphic.Drawable;
 public class Player extends Drawable {
 
 	@Override
-	public void onDraw(Graphics2D g) {
+	public void onDraw(Graphics2D g, float delta) {
 		// TODO Auto-generated method stub
 		
 	}

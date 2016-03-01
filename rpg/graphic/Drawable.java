@@ -106,6 +106,6 @@ public abstract class Drawable {
 	 * Method to be called upon drawing of this object.
 	 * @param g
 	 */
-	public abstract void onDraw(Graphics2D g);
+	public abstract void onDraw(Graphics2D g, float delta);
 	
 }
