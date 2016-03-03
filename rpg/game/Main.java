@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import character.Player;
 import graphic.*;
 import graphic.map.*;
 import graphic.ui.*;
@@ -56,6 +57,7 @@ public class Main {
 		game_map.add(new Fireplace(5 * 64, 4 * 64));
 		game_map.add(new LightSource(-5 * 64, 1 * 64));
 		game_map.add(new LightSource(5 * 64, 4 * 64));
+		game_map.add(new Player("Player 1", 0, 0));
 		
 		Group main_g = new Group();
 		Group cred_g = new Group();
