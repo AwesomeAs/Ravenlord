@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import character.Controllable;
 import character.Player;
 import graphic.*;
 import graphic.map.*;
@@ -20,6 +21,7 @@ public class Main {
 		Viewport view = Viewport.getInstance();
 		WSDAPI userAPI = WSDAPI.getInstance();
 		Group mainbg_g = new Group();
+		Player player = new Player("Player 1", Controllable.Direction.DOWN, 0, 0);
 		for (int x = -1600; x < 1600; x += 64) {
 			for (int y = -1200; y < 1200; y += 64) {
 				mainbg_g.add(new Grass(x, y));
@@ -57,7 +59,7 @@ public class Main {
 		game_map.add(new Fireplace(5 * 64, 4 * 64));
 		game_map.add(new LightSource(-5 * 64, 1 * 64));
 		game_map.add(new LightSource(5 * 64, 4 * 64));
-		game_map.add(new Player("Player 1", 0, 0));
+		game_map.add(player);
 		
 		Group main_g = new Group();
 		Group cred_g = new Group();
@@ -91,7 +93,42 @@ public class Main {
 			}
 			
 		});
-		
+		view.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP) {
+					player.setDicrection(Controllable.Direction.UP);
+					player.setWalking(true);
+					player.moveTo(0, -100, true);
+				}
+				if(e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN) {
+					player.setDicrection(Controllable.Direction.DOWN);
+					player.setWalking(true);
+					player.moveTo(0, 100, true);
+				}
+				if(e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_LEFT) {
+					player.setDicrection(Controllable.Direction.LEFT);
+					player.setWalking(true);
+					player.moveTo(-100, 0, true);
+				}
+				if(e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_RIGHT) {
+					player.setDicrection(Controllable.Direction.RIGHT);
+					player.setWalking(true);
+					player.moveTo(100, 0, true);
+				}
+			}
+		});
 		main_g.add(new LButton("Play game", AnchorPoint.CENTER, -286, -82).setSize(572, 64).setCallback(new ButtonCallback() {
 
 			@Override
