@@ -1,17 +1,17 @@
 package item;
 
+import character.Controllable;
 import character.Player;
 import feature.Touchable;
 
-public abstract class Droppable extends Touchable {
+public interface Droppable extends Touchable {
 	
 	/**
 	 * Method to be called upon a player touching this object, picking it up.
 	 * @param player
 	 */
-	public void onTouch(Player player) {
+	default void onTouch(Controllable character) { // Default implementation. Perhaps something to reconsider.
 		// TODO: Make the player pick up the droppable.
-		
 	}
 	
 }

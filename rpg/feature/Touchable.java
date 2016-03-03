@@ -1,14 +1,16 @@
 package feature;
 
+import character.Controllable;
 import character.Player;
 import graphic.Drawable;
 
-public abstract class Touchable extends Drawable {
+public interface Touchable {
 	
 	/**
 	 * Method to be called upon a player touching this object.
 	 * @param player
 	 */
-	public abstract void onTouch(Player player);
-
+	void onTouch(Controllable character);
+	void pick(Controllable character);
+	boolean isPickable();
 }
