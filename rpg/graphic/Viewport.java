@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 import javax.swing.ImageIcon;
@@ -39,7 +40,7 @@ public class Viewport {
 	private JFrame frame;
 	private CustomPanel panel;
 	private Drawable viewAnchor;
-	private KeyListener keylistener;
+	private List<KeyListener> keylisteners = new ArrayList<KeyListener>();
 	
 	private ArrayList<Drawable> render;
 	private long time = System.currentTimeMillis();
@@ -103,7 +104,7 @@ public class Viewport {
 	 * @param event listener
 	 */
 	public void addKeyListener(KeyListener e) {
-		keylistener = e;
+		keylisteners.add(e);
 	}
 	
 	/**
@@ -195,13 +196,19 @@ public class Viewport {
 
 		@Override
 		public boolean dispatchKeyEvent(KeyEvent e) {
-			if (keylistener != null) {
+			if (keylisteners.size() > 0) {
 				if (e.getID() == KeyEvent.KEY_PRESSED) {
-					keylistener.keyPressed(e);
+					for(KeyListener kl : keylisteners) {
+						kl.keyPressed(e);
+					}
 				} else if (e.getID() == KeyEvent.KEY_RELEASED) {
-					keylistener.keyReleased(e);
+					for(KeyListener kl : keylisteners) {
+						kl.keyReleased(e);
+					}
 				} else if (e.getID() == KeyEvent.KEY_TYPED) {
-					keylistener.keyTyped(e);
+					for(KeyListener kl : keylisteners) {
+						kl.keyTyped(e);
+					}
 				}
 			}
 			return false;
