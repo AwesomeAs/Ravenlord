@@ -110,7 +110,7 @@ public class Player extends Drawable implements Controllable {
 	}
 
 	@Override
-	public void setDicrection(Direction direction) {
+	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}
 

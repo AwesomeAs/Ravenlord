@@ -7,7 +7,7 @@ public interface Controllable {
 	void moveTo(double x, double y, boolean relative);
 	void attack(Object... objects);
 	Direction getDirection();
-	void setDicrection(Direction direction);
+	void setDirection(Direction direction);
 	boolean isWalking();
 	void setWalking(boolean walking);
 	float getWalkSpeed();
