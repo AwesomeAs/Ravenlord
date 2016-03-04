@@ -80,6 +80,7 @@ public class Main {
 						view.remove(login_g);
 						view.add(mainbg_g);
 						view.add(main_g);
+						view.setViewAnchor(null);
 					}
 				}
 			}
@@ -110,22 +111,22 @@ public class Main {
 				if(e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP) {
 					player.setDicrection(Controllable.Direction.UP);
 					player.setWalking(true);
-					player.moveTo(0, -100, true);
+					player.moveTo(0, -200, true);
 				}
 				if(e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN) {
 					player.setDicrection(Controllable.Direction.DOWN);
 					player.setWalking(true);
-					player.moveTo(0, 100, true);
+					player.moveTo(0, 200, true);
 				}
 				if(e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_LEFT) {
 					player.setDicrection(Controllable.Direction.LEFT);
 					player.setWalking(true);
-					player.moveTo(-100, 0, true);
+					player.moveTo(-200, 0, true);
 				}
 				if(e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_RIGHT) {
 					player.setDicrection(Controllable.Direction.RIGHT);
 					player.setWalking(true);
-					player.moveTo(100, 0, true);
+					player.moveTo(200, 0, true);
 				}
 			}
 		});
@@ -137,6 +138,7 @@ public class Main {
 					view.remove(main_g);
 					view.remove(mainbg_g);
 					view.add(game_map);
+					view.setViewAnchor(player);
 				} else {
 					view.remove(main_g);
 					view.add(login_g);

@@ -15,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -43,7 +44,9 @@ public class Viewport {
 	private List<KeyListener> keylisteners = new ArrayList<KeyListener>();
 	
 	private ArrayList<Drawable> render;
-	private long time = System.currentTimeMillis();
+	private HashMap<Drawable, Long> bdrawTime = new HashMap<Drawable, Long>(); //System.currentTimeMillis();
+	private HashMap<Drawable, Long> odrawTime = new HashMap<Drawable, Long>();
+	private long drawTime = System.currentTimeMillis();
 	
 	/**
 	 * Gets the singleton instance.
@@ -242,7 +245,7 @@ public class Viewport {
 			Hashtable<Integer, ArrayList<Drawable>> crender = new Hashtable<Integer, ArrayList<Drawable>>();
 			ArrayList<Integer> zindexes = new ArrayList<Integer>();
 			
-			float delta = (float)Math.pow(System.currentTimeMillis() - time + 0.1, 0.01) / 100f;
+			
 			
 			/**
 			 * Add current Z-indexes and drawables.
@@ -260,6 +263,8 @@ public class Viewport {
 							crender.put(z, new ArrayList<Drawable>());
 						}
 						crender.get(z).add(d[j]);
+						d[j].beforeDraw((System.currentTimeMillis() - bdrawTime.getOrDefault(d[j], System.currentTimeMillis())) / 1000f);
+						bdrawTime.put(d[j], System.currentTimeMillis());
 					}
 				} else {
 					Drawable d = (Drawable)iter[i];
@@ -271,6 +276,8 @@ public class Viewport {
 						crender.put(z, new ArrayList<Drawable>());
 					}
 					crender.get(z).add(d);
+					d.beforeDraw((System.currentTimeMillis() - bdrawTime.getOrDefault(d, System.currentTimeMillis())) / 1000f);
+					bdrawTime.put(d, System.currentTimeMillis());
 				}
 			}
 			
@@ -354,17 +361,19 @@ public class Viewport {
 							((LTextfield)o).getTextfield().setLocation((int)(x_off + x) + 8, (int)(y_off + y));
 						}
 						g2d.translate(x_off + x, y_off + y);
-						o.onDraw(g2d, delta);
+						o.onDraw(g2d, (System.currentTimeMillis() - odrawTime.getOrDefault(o, System.currentTimeMillis())) / 1000f);
+						odrawTime.put(o, System.currentTimeMillis());
 						g2d.translate(-x_off - x, -y_off - y);
 					} else if (!(o instanceof LightSource)) {
 						int x_off = getWidth() / 2;
 						int y_off = getHeight() / 2;
 						if (viewAnchor != null) {
-							x_off += viewAnchor.getX();
-							y_off += viewAnchor.getY();
+							x_off -= viewAnchor.getX();
+							y_off -= viewAnchor.getY();
 						}
 						g2d.translate(x + x_off, y + y_off);
-						o.onDraw(g2d, delta);
+						o.onDraw(g2d, (System.currentTimeMillis() - odrawTime.getOrDefault(o, System.currentTimeMillis())) / 1000f);
+						odrawTime.put(o, System.currentTimeMillis());
 						g2d.translate(-x - x_off, -y - y_off);
 					}
 				}
@@ -380,8 +389,8 @@ public class Viewport {
 					int x_off = getWidth() / 2;
 					int y_off = getHeight() / 2;
 					if (viewAnchor != null) {
-						x_off += viewAnchor.getX();
-						y_off += viewAnchor.getY();
+						x_off -= viewAnchor.getX();
+						y_off -= viewAnchor.getY();
 					}
 					BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
 					Graphics2D dg = img.createGraphics();
@@ -441,9 +450,9 @@ public class Viewport {
 			while (true) {
 				panel.repaint();
 				try {
-					Thread.sleep(10 - Math.min(10, System.currentTimeMillis() - time));
+					Thread.sleep(5 - Math.min(5, System.currentTimeMillis() - drawTime));
 				} catch (InterruptedException e) {}
-				time = System.currentTimeMillis();
+				drawTime = System.currentTimeMillis();
 			}
 		}
 	}
