@@ -10,12 +10,13 @@ public class Player extends Drawable implements Controllable {
 	private int level = 1;
 	private String name;
 	private boolean walking;
-	private float walkSpeed = 20;
+	private float walkSpeed = 200;
 	private double goalX;
 	private double goalY;
 	private Appearance appearance;
 	private Animation[] anim;
 	private Controllable.Direction direction;
+	private BufferedImage img = null;
 
 	public Player(String name, double x, double y) {
 		this(name, Controllable.Direction.DOWN, x, y);
@@ -23,19 +24,21 @@ public class Player extends Drawable implements Controllable {
 
 	public Player(String name, Controllable.Direction direction, double x, double y) {
 		super.setPosition(x, y);
-		super.setImgHeight(64);
+		super.setImgHeight(129);
 		this.name = name;
 		this.direction = direction;
 		goalX = x;
 		goalY = y;
-		anim = new Animation[] { new Animation("character/Avatar1d0", 48, 0.2),
-				new Animation("character/Avatar1u0", 48, 0.2), new Animation("character/Avatar1l0", 48, 0.2),
-				new Animation("character/Avatar1r0", 48, 0.2) };
+		anim = new Animation[] {
+				new Animation("character/Avatar1d0", 48, 0.2),
+				new Animation("character/Avatar1u0", 48, 0.2),
+				new Animation("character/Avatar1l0", 48, 0.2),
+				new Animation("character/Avatar1r0", 48, 0.2)
+		};
 	}
-
+	
 	@Override
-	public void onDraw(Graphics2D g, float delta) {
-		BufferedImage img = null;
+	public void beforeDraw(float delta) {
 		double dx = 0;
 		double dy = 0; 
 		switch (direction) {
@@ -66,6 +69,10 @@ public class Player extends Drawable implements Controllable {
 				walking = false;
 			}
 		}
+	}
+
+	@Override
+	public void onDraw(Graphics2D g, float delta) {
 		g.drawImage(img, 0, 0, null);
 	}
 
@@ -90,7 +97,6 @@ public class Player extends Drawable implements Controllable {
 			goalX = x;
 			goalY = y;
 		}
-
 		walking = true;
 	}
 
