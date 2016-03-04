@@ -105,7 +105,14 @@ public abstract class Drawable {
 	/**
 	 * Method to be called upon drawing of this object.
 	 * @param g
+	 * @param delta
 	 */
 	public abstract void onDraw(Graphics2D g, float delta);
+	
+	/**
+	 * Method to be called before drawing this object. Is not called in sorted order.
+	 * @param delta
+	 */
+	public void beforeDraw(float delta) {}
 	
 }
