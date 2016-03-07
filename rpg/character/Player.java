@@ -1,6 +1,7 @@
 package character;
 
 import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 
 import feature.Animation;
@@ -24,8 +25,10 @@ public class Player extends Drawable implements Controllable {
 
 	public Player(String name, Controllable.Direction direction, double x, double y) {
 		super.setPosition(x, y);
-		super.setImgHeight(109);
+		super.setImgHeight(117);
 		super.setSize(96, 128);
+		super.getCollision().add(new Ellipse2D.Double(22, 105, 64 / 1.3, 32 / 1.3));
+		super.setCollide(true);
 		this.name = name;
 		this.direction = direction;
 		goalX = x;

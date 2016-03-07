@@ -1,6 +1,9 @@
 package graphic;
 
 import java.awt.Graphics2D;
+import java.util.Iterator;
+
+import feature.CollisionArea;
 
 public abstract class Drawable {
 	
@@ -12,6 +15,8 @@ public abstract class Drawable {
 	private double height;
 	private int ZIndex = 10;
 	private double imgheight = 0;
+	private boolean cancollide = false;
+	private CollisionArea collision = new CollisionArea();
 	
 	/**
 	 * Gets the X coordinate in world space.
@@ -51,8 +56,20 @@ public abstract class Drawable {
 	 * @param y
 	 */
 	public void setPosition(double x, double y) {
-		this.x = x;
-		this.y = y;
+		if (!cancollide) {
+			this.x = x;
+			this.y = y;
+		} else {
+			Iterator<Drawable> l = Viewport.getInstance().getObjects();
+			while (l.hasNext()) {
+				Drawable o = l.next();
+				if (!o.equals(this) && o.cancollide && this.isColliding(o, o.x - x, o.y - y)) {
+					return;
+				}
+			}
+			this.x = x;
+			this.y = y;
+		}
 	}
 	
 	/**
@@ -88,6 +105,48 @@ public abstract class Drawable {
 	 */
 	public int getAnimationID() {
 		return 0;
+	}
+	
+	/**
+	 * Gets this drawable's ability to collide.
+	 * @return boolean indicating if this object can collide with other collidable objects.
+	 */
+	public boolean canCollide() {
+		return cancollide;
+	}
+	
+	/**
+	 * Sets this drawable's ability to collide.
+	 * @param cancollide
+	 */
+	public void setCollide(boolean cancollide) {
+		this.cancollide = cancollide;
+	}
+	
+	/**
+	 * Gives an object which can have shapes added to it and check if a point is within intersection.
+	 * @return collision shape
+	 */
+	public CollisionArea getCollision() {
+		return collision;
+	}
+	
+	/**
+	 * Checks if the current drawable's collision area is colliding with the other drawable's collision area, given a delta offset.
+	 * For calculating pre-move and preventing move if the drawables will collide.
+	 * @param other
+	 * @param dx
+	 * @param dy
+	 * @return boolean indicating if the collision areas overlaps.
+	 */
+	public boolean isColliding(Drawable other, double dx, double dy) {
+		boolean colliding = false;
+		other.collision.translate(dx, dy);
+		if (other.collision.intersects(this.collision)) {
+			colliding = true;
+		}
+		other.collision.translate(-dx, -dy);
+		return colliding;
 	}
 	
 	/**

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -102,6 +103,27 @@ public class Viewport {
 	 */
 	public boolean has(Drawable obj) {
 		return render.contains(obj);
+	}
+	
+	/**
+	 * Gives the list of all drawables currently being rendered.
+	 * @return list of drawables.
+	 */
+	public Iterator<Drawable> getObjects() {
+		Iterator<Drawable> iter = render.iterator();
+		ArrayList<Drawable> l = new ArrayList<Drawable>();
+		while (iter.hasNext()) {
+			Drawable o = iter.next();
+			if (o instanceof Group) {
+				Drawable[] j = ((Group)o).getObjects();
+				for (int i = 0; i < j.length; i++) {
+					l.add(j[i]);
+				}
+			} else {
+				l.add(o);
+			}
+		}
+		return l.iterator();
 	}
 	
 	/**
@@ -384,6 +406,10 @@ public class Viewport {
 							g2d.drawLine(0, (int)o.getImgHeight(), 64, (int)o.getImgHeight());
 							g2d.setColor(Color.red);
 							g2d.fillRect(w / 2, h / 2, 4, 4);
+							BufferedImage img = o.getCollision().getVisualisation();
+							if (img != null) {
+								g2d.drawImage(img, 0, 0, null);
+							}
 						}
 						g2d.setClip(null);
 						g2d.translate(-x - x_off + w / 2, -y - y_off + h / 2);
