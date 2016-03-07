@@ -26,21 +26,21 @@ public class Main {
 		Player player = new Player("Player 1", Controllable.Direction.DOWN, 0, 0);
 		for (int x = -1600; x < 1600; x += 64) {
 			for (int y = -1200; y < 1200; y += 64) {
-				mainbg_g.add(new Grass(x, y));
+				mainbg_g.add(new Grass(x + 32, y + 32));
 			}
 		}
 		for (int x = -384; x < 384; x += 64) {
-			mainbg_g.add(new CobbleWall(x, -256 - 64, (x > -384 ? (x < 384 - 64 ? "CTM" : "CTR") : "CTL")));
+			mainbg_g.add(new CobbleWall(x + 32, -256 + 32 - 64, (x > -384 ? (x < 384 - 64 ? "CTM" : "CTR") : "CTL")));
 		}
 		for (int x = -384; x < 384; x += 64) {
 			for (int y = -256; y < 256 - 64; y += 64) {
-				mainbg_g.add(new CobbleWall(x, y, (x > -384 ? (x < 384 - 64 ? "CMUM" : "CMUR") : "CMUL")));
+				mainbg_g.add(new CobbleWall(x + 32, y + 32, (x > -384 ? (x < 384 - 64 ? "CMUM" : "CMUR") : "CMUL")));
 			}
 		}
 		for (int x = -384; x < 384; x += 64) {
-			mainbg_g.add(new CobbleWall(x, 256 - 64, (x > -384 ? (x < 384 - 64 ? "CBM" : "CBR") : "CBL")));
+			mainbg_g.add(new CobbleWall(x + 32, 256 - 32, (x > -384 ? (x < 384 - 64 ? "CBM" : "CBR") : "CBL")));
 		}
-		mainbg_g.add(new Fireplace(-384 + 64, 192));
+		mainbg_g.add(new Fireplace(-384 + 128, 192 + 64));
 		view.add(mainbg_g);
 
 		Map game_map = new Map();

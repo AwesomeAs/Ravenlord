@@ -22,14 +22,15 @@ public class ImageManager {
 		return imgs.get(path);
 	}
 	
-	public BufferedImage colorImage(Drawable key, int w, int h, int x_off, int y_off,
-			int mcol_r, int mcol_g, int mcol_b) {
-		if (!cimgs.containsKey(key.hashCode() + "," + x_off + "," + y_off)) {
+	public BufferedImage colorImage(Drawable key, int mcol_r, int mcol_g, int mcol_b) {
+		if (!cimgs.containsKey(key.hashCode() + "|" + key.getAnimationID())) {
+			int w = key.sizeWidth();
+			int h = key.sizeHeight();
 			BufferedImage timg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 			Graphics2D tdg = timg.createGraphics();
-			tdg.translate(key.getX() + x_off, key.getY() + y_off);
+			tdg.setClip(0, 0, w, h);
 			key.onDraw(tdg, 0);
-			tdg.translate(-key.getX() - x_off, -key.getY() - y_off);
+			tdg.setClip(null);
 			tdg.dispose();
 			WritableRaster raster = timg.getRaster();
 
@@ -43,10 +44,10 @@ public class ImageManager {
 				}
 			}
 
-			cimgs.put(key.hashCode() + "," + x_off + "," + y_off, timg);
+			cimgs.put(key.hashCode() + "|" + key.getAnimationID(), timg);
 			timg.flush();
 		}
-		return cimgs.get(key.hashCode() + "," + x_off + "," + y_off);
+		return cimgs.get(key.hashCode() + "|" + key.getAnimationID());
 	}
 	
 	public static ImageManager getInstance() {
