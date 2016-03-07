@@ -7,6 +7,8 @@ public abstract class Drawable {
 	private double x;
 	private double y;
 	private double offset;
+	private int iwidth = 64;
+	private int iheight = 64;
 	private double height;
 	private int ZIndex = 10;
 	private double imgheight = 0;
@@ -51,6 +53,41 @@ public abstract class Drawable {
 	public void setPosition(double x, double y) {
 		this.x = x;
 		this.y = y;
+	}
+	
+	/**
+	 * Gets the allowed width for this element to be drawn at. Defaults to 64.
+	 * @return width of image
+	 */
+	public int sizeWidth() {
+		return iwidth;
+	}
+	
+	/**
+	 * Gets the allowed height for this element to be drawn at. Defaults to 64.
+	 * @return height of image
+	 */
+	public int sizeHeight() {
+		return iheight;
+	}
+	
+	/**
+	 * Sets the allowed width and height for this element to be drawn at.
+	 * @param width
+	 * @param height
+	 */
+	public Drawable setSize(int width, int height) {
+		iwidth = width;
+		iheight = height;
+		return null;
+	}
+	
+	/**
+	 * Allows the shadowing system to draw shadows depending on the unique current animation clip.
+	 * @return animation index
+	 */
+	public int getAnimationID() {
+		return 0;
 	}
 	
 	/**

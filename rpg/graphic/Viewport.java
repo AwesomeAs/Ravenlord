@@ -48,6 +48,8 @@ public class Viewport {
 	private HashMap<Drawable, Long> odrawTime = new HashMap<Drawable, Long>();
 	private long drawTime = System.currentTimeMillis();
 	
+	private static final boolean DEBUG = true;
+	
 	/**
 	 * Gets the singleton instance.
 	 * @return Viewport
@@ -320,6 +322,8 @@ public class Viewport {
 					Drawable o = crender.get(zindexes.get(i)).get(j);
 					double x = o.getX();
 					double y = o.getY() - o.getGroundOffset();
+					int w = o.sizeWidth();
+					int h = o.sizeHeight();
 					if (o instanceof UIElement) {
 						int x_off = 0;
 						int y_off = 0;
@@ -371,10 +375,18 @@ public class Viewport {
 							x_off -= viewAnchor.getX();
 							y_off -= viewAnchor.getY();
 						}
-						g2d.translate(x + x_off, y + y_off);
+						g2d.translate(x + x_off - w / 2, y + y_off - h / 2);
+						g2d.setClip(0, 0, w, h);
 						o.onDraw(g2d, (System.currentTimeMillis() - odrawTime.getOrDefault(o, System.currentTimeMillis())) / 1000f);
 						odrawTime.put(o, System.currentTimeMillis());
-						g2d.translate(-x - x_off, -y - y_off);
+						if (DEBUG) {
+							g2d.setColor(Color.cyan);
+							g2d.drawLine(0, (int)o.getImgHeight(), 64, (int)o.getImgHeight());
+							g2d.setColor(Color.red);
+							g2d.fillRect(w / 2, h / 2, 4, 4);
+						}
+						g2d.setClip(null);
+						g2d.translate(-x - x_off + w / 2, -y - y_off + h / 2);
 					}
 				}
 			}
@@ -409,18 +421,28 @@ public class Viewport {
 								dg.setComposite(AlphaComposite.getInstance(AlphaComposite.XOR, map.getLightFactor()));
 								LightSource l = (LightSource)o;
 								RadialGradientPaint p = new RadialGradientPaint(
-										(float)l.getX() + x_off + l.getRange(), (float)l.getY() + y_off + l.getRange(),
+										(float)l.getX() + x_off, (float)l.getY() + y_off,
 										l.getRange(), l.getFractions(), l.getColor());
 								dg.setPaint(p);
 								dg.fillRect(0, 0, getWidth(), getHeight());
+								if (DEBUG) {
+									g2d.setColor(Color.orange);
+									g2d.drawLine(
+											(int)(l.getX() + x_off - l.sizeWidth() / 2),
+											(int)(l.getY() + y_off + l.getImgHeight() - l.sizeHeight()),
+											(int)(l.getX() + x_off + l.sizeWidth() / 2),
+											(int)(l.getY() + y_off + l.getImgHeight() - l.sizeHeight()));
+									g2d.setColor(Color.red);
+									g2d.fillRect((int)(l.getX() + x_off + l.sizeWidth() / 2), (int)(l.getY() + y_off + l.sizeHeight() / 2),
+											4, 4);
+								}
 								hasLight = true;
 							} else if (!(o instanceof UIElement) && hasLight) {
-								int w = getWidth();
-								int h = getHeight();
 								dg.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-								BufferedImage timg = ImageManager.getInstance()
-										.colorImage(o, w, h, x_off, y_off, mcol_r, mcol_g, mcol_b);
+								BufferedImage timg = ImageManager.getInstance().colorImage(o, mcol_r, mcol_g, mcol_b);
+								dg.translate(x_off + o.getX() - o.sizeWidth() / 2, y_off + o.getY() - o.sizeHeight() / 2);
 						        dg.drawImage(timg, 0, 0, null);
+						        dg.translate(-x_off - o.getX() + o.sizeWidth() / 2, -y_off - o.getY() + o.sizeHeight() / 2);
 							}
 						}
 					}

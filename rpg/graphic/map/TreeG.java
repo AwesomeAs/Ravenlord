@@ -12,7 +12,8 @@ public class TreeG extends Drawable {
 	
 	public TreeG(int x, int y, int treeType) {
 		super.setPosition(x, y);
-		super.setImgHeight(354);
+		super.setImgHeight(214);
+		super.setSize(384, 384);
 		anim = new Animation("map/TreeG" + treeType);
 	}
 

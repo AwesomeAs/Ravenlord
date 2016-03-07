@@ -25,6 +25,7 @@ public class Player extends Drawable implements Controllable {
 	public Player(String name, Controllable.Direction direction, double x, double y) {
 		super.setPosition(x, y);
 		super.setImgHeight(109);
+		super.setSize(96, 128);
 		this.name = name;
 		this.direction = direction;
 		goalX = x;

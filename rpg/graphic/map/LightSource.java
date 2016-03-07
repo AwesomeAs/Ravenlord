@@ -17,12 +17,12 @@ public class LightSource extends Drawable {
 	
 	public LightSource(int x, int y) {
 		super.setPosition(x, y);
-		super.setImgHeight(128);
+		super.setImgHeight(64 * 1.45);
 	}
 	
 	public LightSource setRange(float value) {
 		range = value;
-		super.setImgHeight(range * 2);
+		super.setImgHeight(range * 1.45);
 		return this;
 	}
 	

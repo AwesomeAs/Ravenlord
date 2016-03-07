@@ -13,6 +13,7 @@ public class Fireplace extends Drawable {
 	public Fireplace(int x, int y) {
 		super.setPosition(x, y);
 		super.setImgHeight(90);
+		super.setSize(128, 128);
 		anim = new Animation("map/Fireplace0", 64, 0.3f);
 	}
 
