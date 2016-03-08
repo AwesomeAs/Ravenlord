@@ -63,7 +63,8 @@ public abstract class Drawable {
 			Iterator<Drawable> l = Viewport.getInstance().getObjects();
 			while (l.hasNext()) {
 				Drawable o = l.next();
-				if (!o.equals(this) && o.cancollide && this.isColliding(o, o.x - x, o.y - y)) {
+				if (!o.equals(this) && o.cancollide && this.isColliding(o,
+						o.x - o.iwidth / 2 - x + iwidth / 2, o.y - o.iheight / 2 - y + iheight / 2)) {
 					return;
 				}
 			}
