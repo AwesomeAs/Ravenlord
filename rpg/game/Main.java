@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import character.Controllable;
@@ -18,12 +18,16 @@ import graphic.ui.UIElement.AnchorPoint;
 import wsd_api.*;
 
 public class Main {
+	private static Set<Integer> pressed = new LinkedHashSet<Integer>();
+	private static Player player;
 
 	public static void main(String[] args) {
 		Viewport view = Viewport.getInstance();
 		WSDAPI userAPI = WSDAPI.getInstance();
 		Group mainbg_g = new Group();
-		Player player = new Player("Player 1", Controllable.Direction.DOWN, 0, 0);
+		player = new Player("Player 1", Controllable.Direction.DOWN, 0, 0);
+		Thread movement = new Thread(new Movement());
+		movement.start();
 		for (int x = -1600; x < 1600; x += 64) {
 			for (int y = -1200; y < 1200; y += 64) {
 				mainbg_g.add(new Grass(x + 32, y + 32));
@@ -97,48 +101,19 @@ public class Main {
 
 		});
 		view.addKeyListener(new KeyListener() {
-			Set<Integer> pressed = new HashSet<Integer>();
 
 			@Override
 			public void keyTyped(KeyEvent e) {
-
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
 				pressed.remove(e.getKeyCode());
-				if(pressed.size() == 0) {
-					player.setWalking(false);
-				}
 			}
 
 			@Override
 			public void keyPressed(KeyEvent e) {
 				pressed.add(e.getKeyCode());
-				if (pressed.size() > 0) {
-					for (Integer ke : pressed) {
-						if (ke == KeyEvent.VK_W || ke == KeyEvent.VK_UP) {
-							player.setDirection(Controllable.Direction.UP);
-							player.setWalking(true);
-							player.moveTo(0, -200, true);
-						}
-						if (ke == KeyEvent.VK_S || ke == KeyEvent.VK_DOWN) {
-							player.setDirection(Controllable.Direction.DOWN);
-							player.setWalking(true);
-							player.moveTo(0, 200, true);
-						}
-						if (ke == KeyEvent.VK_A || ke == KeyEvent.VK_LEFT) {
-							player.setDirection(Controllable.Direction.LEFT);
-							player.setWalking(true);
-							player.moveTo(-200, 0, true);
-						}
-						if (ke == KeyEvent.VK_D || ke == KeyEvent.VK_RIGHT) {
-							player.setDirection(Controllable.Direction.RIGHT);
-							player.setWalking(true);
-							player.moveTo(200, 0, true);
-						}
-					}
-				}
 			}
 		});
 		main_g.add(new LButton("Play game", AnchorPoint.CENTER, -286, -82).setSize(572, 64)
@@ -281,4 +256,48 @@ public class Main {
 		view.add(main_g);
 	}
 
+	private static class Movement implements Runnable {
+		// TODO: Perhaps tune the sleep between key presses.
+		@Override
+		public void run() {
+			while (true) {
+				try {
+					if (pressed.contains(KeyEvent.VK_W) || pressed.contains(KeyEvent.VK_UP)) {
+						player.setDirection(Controllable.Direction.UP);
+						player.setWalking(true);
+						player.moveTo(0, -200, true);
+						Thread.sleep(250); // Sleep a bit make sure the movement
+											// is done.
+					}
+					if (pressed.contains(KeyEvent.VK_S) || pressed.contains(KeyEvent.VK_DOWN)) {
+						player.setDirection(Controllable.Direction.DOWN);
+						player.setWalking(true);
+						player.moveTo(0, 200, true);
+						Thread.sleep(250);// Sleep a bit make sure the movement
+											// is done.
+					}
+					if (pressed.contains(KeyEvent.VK_A) || pressed.contains(KeyEvent.VK_LEFT)) {
+						player.setDirection(Controllable.Direction.LEFT);
+						player.setWalking(true);
+						player.moveTo(-200, 0, true);
+						Thread.sleep(250);// Sleep a bit make sure the movement
+											// is done.
+					}
+					if (pressed.contains(KeyEvent.VK_D) || pressed.contains(KeyEvent.VK_RIGHT)) {
+						player.setDirection(Controllable.Direction.RIGHT);
+						player.setWalking(true);
+						player.moveTo(200, 0, true);
+						Thread.sleep(250);// Sleep a bit make sure the movement
+											// is done.
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if (pressed.size() == 0) {
+					player.setWalking(false);
+				}
+			}
+		}
+
+	}
 }
