@@ -19,10 +19,8 @@ public class FontManager {
 		try {
 			font = Font.createFont(Font.TRUETYPE_FONT, fontStream);
 		} catch (FontFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		GraphicsEnvironment graph = GraphicsEnvironment.getLocalGraphicsEnvironment();
