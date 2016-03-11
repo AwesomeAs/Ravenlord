@@ -47,19 +47,19 @@ public class Player extends Drawable implements Controllable {
 		double dy = 0; 
 		switch (direction) {
 		case DOWN:
-			img = anim[0].getImage(delta);
+			img = anim[0].getImage(delta * (walking ? 1 : 0.10f));
 			dy = 1;
 			break;
 		case UP:
-			img = anim[1].getImage(delta);
+			img = anim[1].getImage(delta * (walking ? 1 : 0.10f));
 			dy = -1;
 			break;
 		case LEFT:
-			img = anim[2].getImage(delta);
+			img = anim[2].getImage(delta * (walking ? 1 : 0.10f));
 			dx = -1;
 			break;
 		case RIGHT:
-			img = anim[3].getImage(delta);
+			img = anim[3].getImage(delta * (walking ? 1 : 0.10f));
 			dx = 1;
 			break;
 		}
