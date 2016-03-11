@@ -26,8 +26,8 @@ public class Main {
 		WSDAPI userAPI = WSDAPI.getInstance();
 		Group mainbg_g = new Group();
 		player = new Player("Player 1", Controllable.Direction.DOWN, 0, 0);
-		Thread movement = new Thread(new Movement());
-		movement.start();
+		// Thread movement = new Thread(new Movement());
+		// movement.start();
 		for (int x = -1600; x < 1600; x += 64) {
 			for (int y = -1200; y < 1200; y += 64) {
 				mainbg_g.add(new Grass(x + 32, y + 32));
@@ -109,11 +109,49 @@ public class Main {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				pressed.remove(e.getKeyCode());
+				if (player.isWalking()) {
+					if (pressed.contains(KeyEvent.VK_W) || pressed.contains(KeyEvent.VK_UP)) {
+						player.setDirection(Controllable.Direction.UP);
+						player.setWalking(true);
+						player.moveTo(0, -200, true);
+					} else if (pressed.contains(KeyEvent.VK_S) || pressed.contains(KeyEvent.VK_DOWN)) {
+						player.setDirection(Controllable.Direction.DOWN);
+						player.setWalking(true);
+						player.moveTo(0, 200, true);
+					} else if (pressed.contains(KeyEvent.VK_A) || pressed.contains(KeyEvent.VK_LEFT)) {
+						player.setDirection(Controllable.Direction.LEFT);
+						player.setWalking(true);
+						player.moveTo(-200, 0, true);
+					} else if (pressed.contains(KeyEvent.VK_D) || pressed.contains(KeyEvent.VK_RIGHT)) {
+						player.setDirection(Controllable.Direction.RIGHT);
+						player.setWalking(true);
+						player.moveTo(200, 0, true);
+					} else {
+						player.setWalking(false);
+					}
+				}
 			}
 
 			@Override
 			public void keyPressed(KeyEvent e) {
 				pressed.add(e.getKeyCode());
+				if (pressed.contains(KeyEvent.VK_W) || pressed.contains(KeyEvent.VK_UP)) {
+					player.setDirection(Controllable.Direction.UP);
+					player.setWalking(true);
+					player.moveTo(0, -200, true);
+				} else if (pressed.contains(KeyEvent.VK_S) || pressed.contains(KeyEvent.VK_DOWN)) {
+					player.setDirection(Controllable.Direction.DOWN);
+					player.setWalking(true);
+					player.moveTo(0, 200, true);
+				} else if (pressed.contains(KeyEvent.VK_A) || pressed.contains(KeyEvent.VK_LEFT)) {
+					player.setDirection(Controllable.Direction.LEFT);
+					player.setWalking(true);
+					player.moveTo(-200, 0, true);
+				} else if (pressed.contains(KeyEvent.VK_D) || pressed.contains(KeyEvent.VK_RIGHT)) {
+					player.setDirection(Controllable.Direction.RIGHT);
+					player.setWalking(true);
+					player.moveTo(200, 0, true);
+				}
 			}
 		});
 		main_g.add(new LButton("Play game", AnchorPoint.CENTER, -286, -82).setSize(572, 64)
@@ -256,48 +294,52 @@ public class Main {
 		view.add(main_g);
 	}
 
-	private static class Movement implements Runnable {
-		// TODO: Perhaps tune the sleep between key presses.
-		@Override
-		public void run() {
-			while (true) {
-				try {
-					if (pressed.contains(KeyEvent.VK_W) || pressed.contains(KeyEvent.VK_UP)) {
-						player.setDirection(Controllable.Direction.UP);
-						player.setWalking(true);
-						player.moveTo(0, -200, true);
-						Thread.sleep(250); // Sleep a bit make sure the movement
-											// is done.
-					}
-					if (pressed.contains(KeyEvent.VK_S) || pressed.contains(KeyEvent.VK_DOWN)) {
-						player.setDirection(Controllable.Direction.DOWN);
-						player.setWalking(true);
-						player.moveTo(0, 200, true);
-						Thread.sleep(250);// Sleep a bit make sure the movement
-											// is done.
-					}
-					if (pressed.contains(KeyEvent.VK_A) || pressed.contains(KeyEvent.VK_LEFT)) {
-						player.setDirection(Controllable.Direction.LEFT);
-						player.setWalking(true);
-						player.moveTo(-200, 0, true);
-						Thread.sleep(250);// Sleep a bit make sure the movement
-											// is done.
-					}
-					if (pressed.contains(KeyEvent.VK_D) || pressed.contains(KeyEvent.VK_RIGHT)) {
-						player.setDirection(Controllable.Direction.RIGHT);
-						player.setWalking(true);
-						player.moveTo(200, 0, true);
-						Thread.sleep(250);// Sleep a bit make sure the movement
-											// is done.
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				if (pressed.size() == 0) {
-					player.setWalking(false);
-				}
-			}
-		}
-
-	}
+	// private static class Movement implements Runnable {
+	// // TODO: Perhaps tune the sleep between key presses.
+	// @Override
+	// public void run() {
+	// while (true) {
+	// try {
+	// if (pressed.contains(KeyEvent.VK_W) ||
+	// pressed.contains(KeyEvent.VK_UP)) {
+	// player.setDirection(Controllable.Direction.UP);
+	// player.setWalking(true);
+	// player.moveTo(0, -200, true);
+	// Thread.sleep(250); // Sleep a bit make sure the movement
+	// // is done.
+	// }
+	// if (pressed.contains(KeyEvent.VK_S) ||
+	// pressed.contains(KeyEvent.VK_DOWN)) {
+	// player.setDirection(Controllable.Direction.DOWN);
+	// player.setWalking(true);
+	// player.moveTo(0, 200, true);
+	// Thread.sleep(250);// Sleep a bit make sure the movement
+	// // is done.
+	// }
+	// if (pressed.contains(KeyEvent.VK_A) ||
+	// pressed.contains(KeyEvent.VK_LEFT)) {
+	// player.setDirection(Controllable.Direction.LEFT);
+	// player.setWalking(true);
+	// player.moveTo(-200, 0, true);
+	// Thread.sleep(250);// Sleep a bit make sure the movement
+	// // is done.
+	// }
+	// if (pressed.contains(KeyEvent.VK_D) ||
+	// pressed.contains(KeyEvent.VK_RIGHT)) {
+	// player.setDirection(Controllable.Direction.RIGHT);
+	// player.setWalking(true);
+	// player.moveTo(200, 0, true);
+	// Thread.sleep(250);// Sleep a bit make sure the movement
+	// // is done.
+	// }
+	// } catch (InterruptedException e) {
+	// e.printStackTrace();
+	// }
+	// if (pressed.size() == 0) {
+	// player.setWalking(false);
+	// }
+	// }
+	// }
+	//
+	// }
 }
